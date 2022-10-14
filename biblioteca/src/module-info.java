@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author deagl
- *
- */
-module biblioteca {
-}

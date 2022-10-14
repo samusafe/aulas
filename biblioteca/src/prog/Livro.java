@@ -1,4 +1,4 @@
-package biblioteca;
+package prog;
 
 public class Livro {
 
