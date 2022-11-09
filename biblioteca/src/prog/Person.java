@@ -5,7 +5,6 @@ public class Person {
 	public enum PersonType {
 		STUDENT,
 		REGULAR,
-		NEW
 	}
 	
 	private String name;
