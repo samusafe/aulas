@@ -12,71 +12,72 @@ public class Main {
 		int option;
 		do {
 			Scanner menu = new Scanner(System.in);
-			System.out.println("[1] Criar utilizador \n[2] Criar despesa \n[3] Ver utilizadores \n[4] Ver despesas");
+			System.out.println("\n[1] Criar utilizador \n[2] Criar despesa \n[3] Ver utilizadores \n[4] Ver despesas");
 			option = menu.nextInt();
-			Scanner scan = new Scanner(System.in);
+			Scanner scanInt = new Scanner(System.in);
+			Scanner scanStr = new Scanner(System.in);
 			switch(option) {
 			case 1:
 				System.out.println("Nome?");
-				String nome = scan.nextLine();
+				String nome = scanStr.nextLine();
 				
 				System.out.println("Email?");
-				String email = scan.nextLine();
+				String email = scanStr.nextLine();
 				
 				System.out.println("Data de nascimento?");
-				String nascimento = scan.nextLine();
+				String nascimento = scanStr.nextLine();
 				
 				if (!addUtilizador(nome, email, nascimento)) {
-					return;
+					System.out.println("Utilizador ja existe");
+					break;
 				}
 				break;
 			case 2:
-				System.out.println("Codigo do utilizador?");
-				int codigo = scan.nextInt();
-				
-				if (!(checkUser(codigo) == null)) {
-					System.out.println("Tipo de despesa? [1] Automovel [2] Alimentar [3] Outro");
-					int type = menu.nextInt();
-					despesaType typeI = null;
-					
-					if (type == 1) {
-						typeI = despesaType.AUTOMOVEL;
-					} else if (type == 2) {
-						typeI = despesaType.ALIMENTAR;
-					} else if (type == 3) {
-						typeI = despesaType.OUTRO;
-					}
-					
-					System.out.println("Valor gasto?");
-					int gasto = menu.nextInt();
-					
-					System.out.println("Data da despesa?");
-					String data = menu.nextLine();
-					
-					addDespesa(checkUser(codigo), typeI, gasto, data);
-					
-				} else {
-					System.out.println("Não existe nenhum utilizador com esse codigo");
-					break;
+				for (int i = 0; i < utilizadores.size(); i++) {
+					System.out.println("[" + i + "]" + "Nome - " + utilizadores.get(i).getNome());
 				}
+				int option2 = scanInt.nextInt();
+				
+				System.out.println("Tipo de despesa? [1] Automovel [2] Alimentar [3] Outro");
+				int type = scanInt.nextInt();
+				despesaType typeI = null;
+				
+				if (type == 1) {
+					typeI = despesaType.AUTOMOVEL;
+				} else if (type == 2) {
+					typeI = despesaType.ALIMENTAR;
+				} else if (type == 3) {
+					typeI = despesaType.OUTRO;
+				}
+				
+				System.out.println("Valor gasto?");
+				int gasto = scanInt.nextInt();
+				
+				System.out.println("Data da despesa?");
+				String data = scanStr.nextLine();
+				
+				addDespesa(utilizadores.get(option2), Utilizador.despesas.size(), typeI, gasto, data);
+				break;
+				
 			case 3:
 				if (hasUtilizadores() == false) {
-					System.out.println("Não há utilizadores");
+					System.out.println("Nao ha utilizadores");
 					break;
 				} else {
 					for (int i = 0; i < utilizadores.size(); i++) {
-						System.out.println(utilizadores.get(i).getNome());
+						System.out.println("Codigo do utilizador - " + utilizadores.get(i).getCodigo() + "\nNome - " + utilizadores.get(i).getNome() + "\nEmail - "
+					+ utilizadores.get(i).getEmail() + "\nData de nascimento - " + utilizadores.get(i).getNascimento() + "\n");
 					}
 					break;
 				}
 			case 4:
 				if (Utilizador.hasDespesas() == false) {
-					System.out.println("Não há despesas");
+					System.out.println("Nao ha despesas");
 					break;
 				} else {
 					for (int i = 0; i < Utilizador.despesas.size(); i++) {
 						System.out.println(Utilizador.despesas.get(i));
-					}
+					}	
 				}
 			default:
 				break;
@@ -104,28 +105,18 @@ public class Main {
 		return null;
 	}
 	
-	public static void addDespesa(Utilizador utilizador, despesaType type, int gasto, String date) {
+	public static void addDespesa(Utilizador utilizador, int codigo, despesaType type, int gasto, String date) {
 		int id = Utilizador.despesas.size();
-		Despesas despesa = new Despesas(utilizador, id, type, gasto, date);
+		Despesas despesa = new Despesas(utilizador, codigo, id, type, gasto, date);
 		
 		for (int i = 0; i < utilizadores.size(); i++) {
 			if (utilizador.equals(utilizadores.get(i))) {
 				utilizadores.get(i).addDespesa(despesa);
 			}
-		}
-		
-	}
-	
-	public void addDespesaToUser(Utilizador utilizador, Despesas despesa) {
-		for (int i = 0; i < utilizadores.size(); i++) {
-			if (utilizador.equals(utilizadores.get(i))) {
-				utilizadores.get(i).addDespesa(despesa);
-			}
-		}
+		}	
 	}
 	
 	public static boolean hasUtilizadores() {
 		return utilizadores.size() > 0;
 	}
-
 }

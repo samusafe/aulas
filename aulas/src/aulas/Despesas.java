@@ -9,25 +9,27 @@ public class Despesas {
 	}
 	
 	private Utilizador utilizador;
+	private int codigo;
 	private int id;
 	private int gasto;
 	private String date;
 	private despesaType type = despesaType.OUTRO;
 	
-	public Despesas(Utilizador utilizador, int id, despesaType type, int gasto, String date) {
+	public Despesas(Utilizador utilizador, int codigo, int id, despesaType type, int gasto, String date) {
 		this.utilizador = utilizador;
+		this.codigo = codigo;
 		this.id = id;
 		this.type = type;
 		this.gasto = gasto;
 		this.date = date;
 	}
 	
-	public Utilizador getUtilizador() {
-		return utilizador;
+	public int getCodigo() {
+		return codigo;
 	}
 
-	public void setUtilizador(Utilizador utilizador) {
-		this.utilizador = utilizador;
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 	public int getId() {
@@ -54,4 +56,15 @@ public class Despesas {
 		this.date = date;
 	}
 	
+	public Utilizador getUtilizador() {
+		return utilizador;
+	}
+
+	public void setUtilizador(Utilizador utilizador) {
+		this.utilizador = utilizador;
+	}
+	
+	public String toString() {
+		return "| Codigo - " + codigo + "\n| Tipo - " + type + "\n| Gasto - " + gasto + "\n| Data da despesa - " + date + "\n";
+	}
 }
