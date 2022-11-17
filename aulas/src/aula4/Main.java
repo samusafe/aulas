@@ -1,12 +1,14 @@
-package aulas;
+package aula4;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import aulas.Despesas.despesaType;
+import aula4.Despesas.despesaType;
 
 public class Main {
-	private static  ArrayList<Utilizador> utilizadores = new ArrayList<>();
+	private static ArrayList<Utilizador> utilizadores = new ArrayList<>();
+	
+	static Utilizador utilizador = new Utilizador();
 	
 	public static void main(String[] args) {
 		int option;
@@ -27,7 +29,7 @@ public class Main {
 				String nascimento = scan.nextLine();
 				
 				if (!addUtilizador(nome, email, nascimento)) {
-					return;
+					break;
 				}
 				break;
 			case 2:
@@ -54,30 +56,29 @@ public class Main {
 					String data = menu.nextLine();
 					
 					addDespesa(checkUser(codigo), typeI, gasto, data);
-					
-				} else {
-					System.out.println("Não existe nenhum utilizador com esse codigo");
 					break;
+					
 				}
+				System.out.println("Não existe nenhum utilizador com esse codigo");
+				break;
 			case 3:
 				if (hasUtilizadores() == false) {
 					System.out.println("Não há utilizadores");
 					break;
-				} else {
-					for (int i = 0; i < utilizadores.size(); i++) {
-						System.out.println(utilizadores.get(i).getNome());
-					}
-					break;
 				}
+				for (int i = 0; i < utilizadores.size(); i++) {
+					System.out.println(utilizadores.get(i).getNome());
+				}
+				break;
 			case 4:
-				if (Utilizador.hasDespesas() == false) {
+				if (utilizador.hasDespesas() == false) {
 					System.out.println("Não há despesas");
 					break;
-				} else {
-					for (int i = 0; i < Utilizador.despesas.size(); i++) {
-						System.out.println(Utilizador.despesas.get(i));
-					}
 				}
+				for (int i = 0; i < utilizador.despesas.size(); i++) {
+					System.out.println(utilizador.despesas.get(i));
+				}
+				break;
 			default:
 				break;
 			}
@@ -105,7 +106,7 @@ public class Main {
 	}
 	
 	public static void addDespesa(Utilizador utilizador, despesaType type, int gasto, String date) {
-		int id = Utilizador.despesas.size();
+		int id = utilizador.despesas.size();
 		Despesas despesa = new Despesas(utilizador, id, type, gasto, date);
 		
 		for (int i = 0; i < utilizadores.size(); i++) {
@@ -127,5 +128,4 @@ public class Main {
 	public static boolean hasUtilizadores() {
 		return utilizadores.size() > 0;
 	}
-
 }

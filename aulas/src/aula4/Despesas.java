@@ -1,4 +1,4 @@
-package aulas;
+package aula4;
 
 public class Despesas {
 	
@@ -52,6 +52,10 @@ public class Despesas {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+	
+	public String toString() {
+		return utilizador + " tipo = " + type + " gasto = " + gasto + " data = " + date;
 	}
 	
 }
