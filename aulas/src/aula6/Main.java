@@ -80,7 +80,7 @@ public class Main {
 					int quantCal = scanInt.nextInt();
 					
 					Ingrediente ingrediente = new Ingrediente(codigo, nomeIng, ingOrigem, quantCal);
-					pizza.getArrayList().add(ingrediente);
+					pizza.ingredientes.add(ingrediente);
 				}
 				break;
 			case 2:
