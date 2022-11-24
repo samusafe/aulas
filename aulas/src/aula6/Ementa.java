@@ -11,7 +11,6 @@ public class Ementa {
 	private String startDate;
 	private String endDate;
 	public ArrayList<Pizza> pizzas;
-	private int quant; 
 	
 	public Ementa(String design, String desc, int code, String startDate, String endDate, int quant) {
 		this.design = design;
@@ -19,7 +18,6 @@ public class Ementa {
 		this.code = code;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.quant = quant;
 		pizzas = new ArrayList<>();
 	}
 
@@ -68,7 +66,6 @@ public class Ementa {
 	}
 
 	public void setQuant(int quant) {
-		this.quant = quant;
 	}
 	
 	public ArrayList<Pizza> getArrayList() {

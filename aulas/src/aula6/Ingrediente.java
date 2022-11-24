@@ -1,7 +1,5 @@
 package aula6;
 
-import java.util.ArrayList;
-
 public class Ingrediente {
 	
 	public enum ingOrigin {
@@ -52,5 +50,9 @@ public class Ingrediente {
 
 	public void setQuantCal(int quantCal) {
 		this.quantCal = quantCal;
+	}
+	
+	public String toString() {
+		return "";
 	}
 }
