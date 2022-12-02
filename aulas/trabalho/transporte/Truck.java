@@ -2,7 +2,7 @@ package transporte;
 
 import java.util.ArrayList;
 
-public class Truck {
+public class Truck{
 	
 	public enum truckState {
 		LOADING,
