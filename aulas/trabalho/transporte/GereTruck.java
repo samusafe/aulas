@@ -6,7 +6,7 @@ import transporte.Truck.truckState;
 
 public class GereTruck {
 	
-	private ArrayList<Truck> trucks = new ArrayList<>();
+	public ArrayList<Truck> trucks = new ArrayList<>();
 	
 	public boolean criarLocal(int volume) {
 		Truck truck = new Truck(truckState.LOADING, volume);

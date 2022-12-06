@@ -261,15 +261,14 @@ body {
 .title {
   font-weight: 400;
   font-size: 1em;
-  margin-bottom: 1em;
   text-align: center;
+  display: inline;
 }
 
 .title2 {
   text-transform: uppercase;
   font-weight: 900;
   font-size: 2.5em;
-  margin-bottom: 1em;
   text-align: left;
 }
 
@@ -277,18 +276,32 @@ body {
   text-transform: uppercase;
   font-weight: 800;
   font-size: 1em;
-  margin-bottom: 1em;
   text-align: center;
 }
 
 .title4 {
-  position: relative;
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 5em; 
+  font-size: 5em;
+  top: 100px;
+  left: 200px;
+  text-align: left;
+}
+
+.title5 {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 1em; 
   top: 70px;
-  left: 130px;
-  margin-bottom: 3em;
+  left: 340px;
+  text-align: left;
+}
+
+.title6 {
+  font-weight: 400;
+  font-size: 1em;
+  top: 200px;
+  left: 250px;
   text-align: left;
 }
 
