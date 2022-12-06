@@ -16,7 +16,11 @@ body {
 }
 
 .light-bg-color {
-  background-color: #FCF5EB
+  background-color: #FCF5EB;
+}
+
+.light-bg-color a:hover {
+  color: #e18709;
 }
 
 .dark-bg-color {
@@ -32,7 +36,7 @@ body {
 }
 
 .light-color {
-  color: #FCF5EB
+  color: #FCF5EB;
 }
 
 /* NAVBAR */
@@ -158,6 +162,7 @@ body {
   padding: 1em;
   left: 12%;
   right: 12%;
+  background-color: rgb(49, 49, 49);
 }
 
 .carousel-caption h5 {
@@ -167,7 +172,7 @@ body {
 @media(min-width: 768px) {
   #slider .carousel-item,
   #slider img {
-    height: 600px;
+    height: 500px;
   }
 
   .carousel-caption {
@@ -182,7 +187,7 @@ body {
 
 /* MINI BANNERS */
 #mini-banners {
-  margin-top: 2em;
+  margin-top: -2em;
   z-index: 10;
 }
 
@@ -225,11 +230,11 @@ body {
 }
 
 #mini-banners .col-12 a:hover {
-  color: #101010;
+  color: #f19c63;
 }
 
 #mini-banners #mini-banner-1 a:hover {
-  color: #C09578;
+  color: #000000;
 }
 
 #mini-banners #mini-banner-3 a {
@@ -237,12 +242,12 @@ body {
 }
 
 #mini-banners #mini-banner-3 a:hover {
-  color: #C09578;
+  color: rgb(176, 141, 87);
 }
 
 /* BEST SELLERS */
 #best-sellers {
-  padding: 4em 0;
+  padding: 2em 0;
 }
 
 #best-sellers .row {
@@ -254,22 +259,49 @@ body {
 }
 
 .title {
-  text-transform: uppercase;
-  font-weight: 900;
-  font-size: 2.5em;
+  font-weight: 400;
+  font-size: 1em;
   margin-bottom: 1em;
   text-align: center;
 }
 
+.title2 {
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 2.5em;
+  margin-bottom: 1em;
+  text-align: left;
+}
+
+.title3 {
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.title4 {
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 5em; 
+  top: 70px;
+  left: 130px;
+  margin-bottom: 3em;
+  text-align: left;
+}
+
 @media(min-width: 768px) {
   .title {
-    text-align: left;
+    text-align: center;
   }
 }
 
 .card {
   text-align: center;
   border-radius: 0;
+  background-color: #fff0;
 }
 
 .card img {
@@ -318,6 +350,10 @@ body {
 
 #bottom-banner img {
   max-width: 175px;
+  position: absolute;
+  right: 150px;
+  width: 300px;
+  padding: 8px;
 }
 
 @media(min-width: 768px) {
@@ -477,6 +513,10 @@ body {
 
 #news-form .btn {
   color: #FFF;
+}
+
+.icon-orange {
+  color: rgb(255, 153, 0);
 }
 
 #social-container {

@@ -1,4 +1,4 @@
-package aulas;
+package aula4;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ public class Utilizador {
 	private String nascimento;
 	private int codigo = 0;
 	
-	public static ArrayList<Despesas> despesas;
+	public ArrayList<Despesas> despesas;
 	
 	public Utilizador(int codigo, String nome, String email, String nascimento) {
 		this.codigo = codigo;
@@ -17,6 +17,10 @@ public class Utilizador {
 		this.email = email;
 		this.nascimento = nascimento;
 		despesas = new ArrayList<>();
+	}
+
+	public Utilizador() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public int getCodigo() {
@@ -65,8 +69,12 @@ public class Utilizador {
 		despesas.add(despesa);
 	}
 	
-	public static boolean hasDespesas() {
+	public boolean hasDespesas() {
 		return despesas.size() > 0;
+	}
+	
+	public String toString() {
+		return nome + " - ";
 	}
 
 }
