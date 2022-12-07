@@ -4,6 +4,9 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
@@ -48,8 +51,7 @@ public class Main {
 			    	showError("Valor inválido");
 			    	return;
 			    } else {
-			    	Truck truck = new Truck(truckState.LOADING, volume);
-			    	gereTruck.trucks.add(truck);
+			    	gereTruck.createTruck(volume);
 			    }
 			}
 		});
@@ -73,35 +75,21 @@ public class Main {
 				JList<Truck> listTruck = new JList<>(truckList);
 				listTruck.setLayoutOrientation(JList.VERTICAL);
 				
-				JOptionPane.showMessageDialog(frame, listTruck, "Camiões", JOptionPane.INFORMATION_MESSAGE);
+				JScrollPane scrollPane = new JScrollPane();
+				JPanel panel = new JPanel();
 				
-				if (listTruck.getSelectedIndex() > -1) {
+				panel.add(scrollPane);
+				scrollPane.getViewport().add(listTruck);
+				
+				int entrada = JOptionPane.showOptionDialog(frame, scrollPane, "Camiões", JOptionPane.DEFAULT_OPTION,
+				        JOptionPane.INFORMATION_MESSAGE, null, null, null);
+				
+				if (entrada != JOptionPane.CLOSED_OPTION && listTruck.getSelectedIndex() != -1) {
 					drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
+				} else if (listTruck.getSelectedIndex() == -1 && entrada == JOptionPane.DEFAULT_OPTION) {
+					showError("Não foi selecionado nenhum camiao");
+					return;
 				}
-			}
-		});
-		
-		JButton addBox = new JButton(addBoxIcon);
-		addBox.setOpaque(false);
-		addBox.setContentAreaFilled(false);
-		addBox.setBorderPainted(false);
-		addBox.setFocusPainted(false);
-		addBox.setBounds(330, 290, 100, 100);
-		addBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				return;
-			}
-		});
-		
-		JButton showTruck = new JButton(truckIcon);
-		showTruck.setOpaque(false);
-		showTruck.setContentAreaFilled(false);
-		showTruck.setBorderPainted(false);
-		showTruck.setFocusPainted(false);
-		showTruck.setBounds(240, 220, 600, 313);
-		showTruck.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				return;
 			}
 		});
 		
@@ -129,33 +117,6 @@ public class Main {
 		label.setForeground(Color.BLACK);
 		label.setFont(new Font("Arial", Font.BOLD, 18));
 		
-		JButton addTruck = new JButton(addTruckIcon);
-		addTruck.setOpaque(false);
-		addTruck.setContentAreaFilled(false);
-		addTruck.setBorderPainted(false);
-		addTruck.setFocusPainted(false);
-		addTruck.setBounds(800, 400, 176, 130);
-		addTruck.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String entrada = JOptionPane.showInputDialog(frame ,"Volume máximo", 
-						"Camião " + (gereTruck.trucks.size() + 1), JOptionPane.INFORMATION_MESSAGE);
-				if (entrada == null) {
-					return;
-				}
-				if (entrada.isEmpty()) {
-					return;
-				}
-				int volume = Integer.parseInt(entrada);
-			    if (volume < 1 || volume > 10000) {
-			    	showError("Valor inválido");
-			    	return;
-			    } else {
-			    	Truck truck = new Truck(truckState.LOADING, volume);
-			    	gereTruck.trucks.add(truck);
-			    }
-			}
-		});
-		
 		JButton manageTruck = new JButton(manageTruckIcon);
 		manageTruck.setOpaque(false);
 		manageTruck.setContentAreaFilled(false);
@@ -164,21 +125,27 @@ public class Main {
 		manageTruck.setBounds(805, 420, 150, 110);
 		manageTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (gereTruck.trucks.size() < 1) {
-					showError("Não há camiões no armazem");
-					return;
-				}
-				
 				DefaultListModel<Truck> truckList = new DefaultListModel<>();
 				truckList.addAll(gereTruck.trucks);
 				
 				JList<Truck> listTruck = new JList<>(truckList);
 				listTruck.setLayoutOrientation(JList.VERTICAL);
 				
-				JOptionPane.showMessageDialog(frame, listTruck, "Camiões", JOptionPane.INFORMATION_MESSAGE);
+				JScrollPane scrollPane = new JScrollPane();
+				JPanel panel = new JPanel();
 				
-				if (listTruck.getSelectedIndex() > -1) {
-					drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
+				panel.add(scrollPane);
+				scrollPane.getViewport().add(listTruck);
+				
+				int entrada = JOptionPane.showOptionDialog(frame, scrollPane, "Camiões", JOptionPane.DEFAULT_OPTION,
+				        JOptionPane.INFORMATION_MESSAGE, null, null, null);
+				
+				if (entrada == JOptionPane.OK_OPTION) {
+					if (listTruck.getSelectedIndex() != -1) {
+						drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
+					} else {
+						showError("Escolha um camião");
+					}
 				}
 			}
 		});
@@ -218,6 +185,10 @@ public class Main {
 
 		        	int option = JOptionPane.showConfirmDialog(frame, message, "Caixas", JOptionPane.OK_CANCEL_OPTION);
 		        	
+		        	if (option == JOptionPane.CLOSED_OPTION) {
+		        		return;
+		        	}
+		        	
 		        	if (ref2.getText().equals("")) {
 						showError("Insira referencia");
 						return;
@@ -252,11 +223,16 @@ public class Main {
 		        	int peso = Integer.parseInt(peso1);
 
 		        	String reference = ref2.getText();
-		        	
+		       
 		        	if (option == JOptionPane.OK_OPTION) {
 		        		gereTruck.addBox(reference, peso, comprimento, altura, largura, truck);
-		        	    return;
+		        	}
+		        }
+		        if (result == JOptionPane.NO_OPTION) {
+		        	if (listBox.getSelectedIndex() != -1) {
+		        		gereTruck.takeBox(truck, listBox.getSelectedIndex());
 		        	} else {
+		        		showError("Seleciona uma caixa");
 		        		return;
 		        	}
 		        }
@@ -269,11 +245,6 @@ public class Main {
 		showTruck.setBorderPainted(false);
 		showTruck.setFocusPainted(false);
 		showTruck.setBounds(240, 220, 600, 313);
-		showTruck.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				return;
-			}
-		});
 		
 		JButton back = new JButton("<<<");
 		back.setBounds(20,20,70,20);

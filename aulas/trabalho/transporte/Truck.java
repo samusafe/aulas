@@ -10,13 +10,15 @@ public class Truck{
 		DELIVERED
 	}
 	
+	private int identificador;
 	private int volume;
 	private truckState truckState;
 	public ArrayList<Box> caixas;
 	
-	public Truck(truckState truckState, int volume) {
+	public Truck(truckState truckState, int volume, int identificador) {
 		this.truckState = truckState;
 		this.volume = volume;
+		this.identificador = identificador;
 		caixas = new ArrayList<>();
 	}
 
@@ -40,6 +42,18 @@ public class Truck{
 		return caixas;
 	}
 	
+	public int getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(int identificador) {
+		this.identificador = identificador;
+	}
+	
+	public boolean hasCaixas() {
+		return caixas.size() > 0;
+	}
+	
 	public void addBox(Box box) {
 		for (int i = 0; i < caixas.size(); i++) {
 			if (caixas.get(i).getTruck() == box.getTruck()) {
@@ -58,11 +72,7 @@ public class Truck{
 		}
 	}
 	
-	public boolean hasCaixas() {
-		return caixas.size() > 0;
-	}
-	
 	public String toString() {
-		return "Camiao -- " + getTruckState() + " -- " + caixas.size();
+		return "Camiao " + (identificador + 1) + " -- " + getTruckState() + " -- " + caixas.size() + " caixas";
 	}
 }

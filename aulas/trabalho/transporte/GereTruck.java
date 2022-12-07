@@ -9,7 +9,7 @@ public class GereTruck {
 	public ArrayList<Truck> trucks = new ArrayList<>();
 	
 	public boolean createTruck(int volume) {
-		Truck truck = new Truck(truckState.LOADING, volume);
+		Truck truck = new Truck(truckState.LOADING, volume, trucks.size());
 		for (int i = 0; i < trucks.size(); i++) {
 			if (truck.equals(trucks.get(i))) {
 				return false;
@@ -26,17 +26,17 @@ public class GereTruck {
 		int volume = calculateBoxVolume(comprimento, altura, largura);
 		Box box = new Box(reference, volume, comprimento, altura, largura, peso, truck);
 		for (int i = 0; i < trucks.size(); i++) {
-			if (truck.equals(trucks.get(i)) || (trucks.get(i).getVolume() + volume) < trucks.get(i).getVolume()) {
+			if (truck.equals(trucks.get(i)) || (trucks.get(i).getVolume() + volume) <= trucks.get(i).getVolume()) {
 				trucks.get(i).setVolume(trucks.get(i).getVolume() + volume);
-				trucks.get(i).addBox(box);
+				trucks.get(i).caixas.add(box);
 			}
 		}
 	}
 	
-	public void takeBox(Truck truck, Box box) {
+	public void takeBox(Truck truck, int box) {
 		for (int i = 0; i < trucks.size(); i++) {
 			if (truck.equals(trucks.get(i))) {
-				trucks.get(i).takeBox(box);
+				trucks.get(i).caixas.remove(box);
 			}
 		}
 	}
