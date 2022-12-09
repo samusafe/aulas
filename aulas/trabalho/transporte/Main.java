@@ -30,11 +30,7 @@ public class Main {
 		JLabel imagem = new JLabel(backgroundImage);
 		imagem.setBounds(0, 0, 1020, 600);
 		
-		JButton addTruck = new JButton(addTruckIcon);
-		addTruck.setOpaque(false);
-		addTruck.setContentAreaFilled(false);
-		addTruck.setBorderPainted(false);
-		addTruck.setFocusPainted(false);
+		MyButton addTruck = new MyButton(addTruckIcon);
 		addTruck.setBounds(800, 400, 176, 130);
 		addTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -56,11 +52,7 @@ public class Main {
 			}
 		});
 		
-		JButton manageTruck = new JButton(manageTruckIcon);
-		manageTruck.setOpaque(false);
-		manageTruck.setContentAreaFilled(false);
-		manageTruck.setBorderPainted(false);
-		manageTruck.setFocusPainted(false);
+		MyButton manageTruck = new MyButton(addTruckIcon);
 		manageTruck.setBounds(805, 290, 150, 110);
 		manageTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -117,11 +109,7 @@ public class Main {
 		label.setForeground(Color.BLACK);
 		label.setFont(new Font("Arial", Font.BOLD, 18));
 		
-		JButton manageTruck = new JButton(manageTruckIcon);
-		manageTruck.setOpaque(false);
-		manageTruck.setContentAreaFilled(false);
-		manageTruck.setBorderPainted(false);
-		manageTruck.setFocusPainted(false);
+		MyButton manageTruck = new MyButton(addTruckIcon);
 		manageTruck.setBounds(805, 420, 150, 110);
 		manageTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
