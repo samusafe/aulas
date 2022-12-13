@@ -4,13 +4,9 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.*;
 
-import transporte.Truck.truckState;
+import transporte.Truck.TruckState;
 
 public class Main {
 	
@@ -34,25 +30,48 @@ public class Main {
 		addTruck.setBounds(800, 400, 176, 130);
 		addTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String entrada = JOptionPane.showInputDialog(frame ,"Volume máximo", 
-						"Camião " + (gereTruck.trucks.size() + 1), JOptionPane.INFORMATION_MESSAGE);
-				if (entrada == null) {
+				JTextField vol2 = new JTextField();
+	        	JTextField pes2 = new JTextField();
+	        	
+	        	Object[] message = {
+	        	    "Volume:", vol2,
+	        	    "Peso:", pes2,
+	        	};
+
+	        	int option = JOptionPane.showConfirmDialog(frame, message, "Caixas", JOptionPane.OK_CANCEL_OPTION);
+	        	
+	        	if (option == JOptionPane.CLOSED_OPTION) {
+	        		return;
+	        	}
+	        	
+	        	if (vol2.getText().equals("")) {
+					showError("Insira um volume");
 					return;
 				}
-				if (entrada.isEmpty()) {
+	        	if (pes2.getText().equals("")) {
+					showError("Insira um peso");
 					return;
 				}
-				int volume = Integer.parseInt(entrada);
+	        	
+	        	String volume2 = vol2.getText();
+	        	int volume = Integer.parseInt(volume2);
+	        	
+	        	String peso2 = pes2.getText();
+	        	int peso = Integer.parseInt(peso2);
+
 			    if (volume < 1 || volume > 10000) {
 			    	showError("Valor inválido");
 			    	return;
+			    } else if (peso < 1 || peso > 10000) {
+			    	showError("Valor inválido");
+			    	return;
 			    } else {
-			    	gereTruck.createTruck(volume);
+			    	gereTruck.createTruck(volume, peso);
 			    }
 			}
 		});
 		
-		MyButton manageTruck = new MyButton(addTruckIcon);
+		MyButton manageTruck = new MyButton(manageTruckIcon);
 		manageTruck.setBounds(805, 290, 150, 110);
 		manageTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -60,27 +79,17 @@ public class Main {
 					showError("Não há camiões no armazem");
 					return;
 				}
+			
+				String[] choices = { "LOADING", "IN_TRANSIT", "DELIVERED" };
 				
-				DefaultListModel<Truck> truckList = new DefaultListModel<>();
-				truckList.addAll(gereTruck.trucks);
+				String entrada = (String) JOptionPane.showInputDialog(frame, "Escolha o estado dos camiões", "Camiões", JOptionPane.YES_NO_OPTION, null, choices, null);
 				
-				JList<Truck> listTruck = new JList<>(truckList);
-				listTruck.setLayoutOrientation(JList.VERTICAL);
-				
-				JScrollPane scrollPane = new JScrollPane();
-				JPanel panel = new JPanel();
-				
-				panel.add(scrollPane);
-				scrollPane.getViewport().add(listTruck);
-				
-				int entrada = JOptionPane.showOptionDialog(frame, scrollPane, "Camiões", JOptionPane.DEFAULT_OPTION,
-				        JOptionPane.INFORMATION_MESSAGE, null, null, null);
-				
-				if (entrada != JOptionPane.CLOSED_OPTION && listTruck.getSelectedIndex() != -1) {
-					drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
-				} else if (listTruck.getSelectedIndex() == -1 && entrada == JOptionPane.DEFAULT_OPTION) {
-					showError("Não foi selecionado nenhum camiao");
-					return;
+				if (entrada == "LOADING") {
+					drawManageTruckMenu(TruckState.LOADING);
+				} else if (entrada == "IN_TRANSIT") {
+					drawManageTruckMenu(TruckState.IN_TRANSIT);
+				} else if (entrada == "DELIVERED") {
+					drawManageTruckMenu(TruckState.DELIVERED);
 				}
 			}
 		});
@@ -98,6 +107,43 @@ public class Main {
 		frame.repaint();
 	}
 	
+	public void drawManageTruckMenu(TruckState truckState) {
+		DefaultListModel<Truck> truckList = new DefaultListModel<>();
+		truckList.addAll(gereTruck.filterByType(truckState));
+		
+		JList<Truck> listTruck = new JList<>(truckList);
+		listTruck.setLayoutOrientation(JList.VERTICAL);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		JPanel panel = new JPanel();
+		
+		panel.add(scrollPane);
+		scrollPane.getViewport().add(listTruck);
+		
+		if (gereTruck.filterByType(truckState).size() < 1) {
+			showError("Não há camiões nesse estado");
+			return;
+		}
+		
+		Object[] options = { "OK", "Modificar" };
+		
+        int result = JOptionPane.showOptionDialog(frame, scrollPane, "Caixas", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        
+        if (result == JOptionPane.YES_OPTION) {
+        	if (listTruck.getSelectedIndex() == -1) {
+        		showError("Escolha um camião");
+        	} else {
+        		drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
+        	}
+        } else if (result == JOptionPane.NO_OPTION) {
+        	if (listTruck.getSelectedIndex() == -1) {
+        		showError("Escolha um camião");
+        	} else {
+        		System.out.println("Yes");
+        	}
+        }
+	}
+	
 	public void drawTruckMenu(Truck truck, int option) {
 		frame.getContentPane().removeAll();
 		
@@ -109,31 +155,25 @@ public class Main {
 		label.setForeground(Color.BLACK);
 		label.setFont(new Font("Arial", Font.BOLD, 18));
 		
-		MyButton manageTruck = new MyButton(addTruckIcon);
+		MyButton manageTruck = new MyButton(manageTruckIcon);
 		manageTruck.setBounds(805, 420, 150, 110);
 		manageTruck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DefaultListModel<Truck> truckList = new DefaultListModel<>();
-				truckList.addAll(gereTruck.trucks);
+				if (gereTruck.trucks.size() < 1) {
+					showError("Não há camiões no armazem");
+					return;
+				}
+			
+				String[] choices = { "LOADING", "IN_TRANSIT", "DELIVERED" };
 				
-				JList<Truck> listTruck = new JList<>(truckList);
-				listTruck.setLayoutOrientation(JList.VERTICAL);
+				String entrada = (String) JOptionPane.showInputDialog(frame, "Escolha o estado dos camiões", "Camiões", JOptionPane.YES_NO_OPTION, null, choices, null);
 				
-				JScrollPane scrollPane = new JScrollPane();
-				JPanel panel = new JPanel();
-				
-				panel.add(scrollPane);
-				scrollPane.getViewport().add(listTruck);
-				
-				int entrada = JOptionPane.showOptionDialog(frame, scrollPane, "Camiões", JOptionPane.DEFAULT_OPTION,
-				        JOptionPane.INFORMATION_MESSAGE, null, null, null);
-				
-				if (entrada == JOptionPane.OK_OPTION) {
-					if (listTruck.getSelectedIndex() != -1) {
-						drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
-					} else {
-						showError("Escolha um camião");
-					}
+				if (entrada == "LOADING") {
+					drawManageTruckMenu(TruckState.LOADING);
+				} else if (entrada == "IN_TRANSIT") {
+					drawManageTruckMenu(TruckState.IN_TRANSIT);
+				} else if (entrada == "DELIVERED") {
+					drawManageTruckMenu(TruckState.DELIVERED);
 				}
 			}
 		});

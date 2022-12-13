@@ -1,3 +1,4 @@
+<!-- 8220442 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- NAVBAR -->
+    <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg primary-bg-color py-4 px-2" id="navbar">
     <div class="container">
       <a class="navbar-brand" href="#">Tick Tack</a>
@@ -50,25 +51,63 @@
         <i class="bi bi-list"></i>
       </button>
       <ul class="navbar-nav mb-2 mb-lg-0 collapse navbar-collapse" id="bottom-navbar">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="produtos.html">Produtos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Promoções</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="contactos.html">Contactos</a>
-          </li>
-        </ul>        
-      </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="produtos.html">Produtos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Promoções</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Blog</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contactos.html">Contactos</a>
+      </ul>       
     </div>
   </nav>
   <!-- FIM NAVBAR -->
+  <!-- CONTACTOS -->
+  <div class="container" id="best-sellers">
+    <div class="row">
+      <div class="card-group">
+        <div class="card">
+          <img src="img/contacto.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <p class="card-text">NOSSO CONTACTO</p>
+            <p class="title3 primary-color">Contactar caso haja alguma dúvida ou interesse em algum produto</p>
+            <button type="button" onclick="contactNow()" class="btn btn-dark">Contactar agora</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="img/email.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <p class="card-text">NOSSO E-MAIL</p>
+            <p class="title3 primary-color">Submeter feedback em relação ao site e como o melhorar</p>
+            <button type="button" onclick="sendEmail()" class="btn btn-dark">Mandar feedback </button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="img/assistente.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <p class="card-text">PEÇA AJUDA</p>
+            <p class="title3 primary-color">Assistente em tempo real para a resolução de problemas</p>
+            <button type="button" class="btn btn-dark">Pedir ajuda</button>
+          </div>
+        </div>
+      </div>
+    </div>
+     <!-- FIM CONTACTOS -->
+  </div>
 </body>
+
+<script>
+  function contactNow() {
+    alert("Email: ticktack@gmail.com \nTelefone: +351 xxx xxx xxx");
+  }
+  function sendEmail() {
+    prompt("Mensagem a enviar", "")
+  }
+</script>

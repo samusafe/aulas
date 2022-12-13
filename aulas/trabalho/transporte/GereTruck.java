@@ -2,14 +2,14 @@ package transporte;
 
 import java.util.ArrayList;
 
-import transporte.Truck.truckState;
+import transporte.Truck.TruckState;
 
 public class GereTruck {
 	
 	public ArrayList<Truck> trucks = new ArrayList<>();
 	
-	public boolean createTruck(int volume) {
-		Truck truck = new Truck(truckState.LOADING, volume, trucks.size());
+	public boolean createTruck(int volume, int peso) {
+		Truck truck = new Truck(TruckState.LOADING, volume, peso, trucks.size());
 		for (int i = 0; i < trucks.size(); i++) {
 			if (truck.equals(trucks.get(i))) {
 				return false;
@@ -52,5 +52,14 @@ public class GereTruck {
 	public int calculateBoxVolume(int comprimento, int altura, int largura) {
 		int volume = comprimento * altura * largura;
 		return volume;
+	}
+	
+	public ArrayList<Truck> filterByType(TruckState truckState) {
+		ArrayList<Truck> trucksFiltrados = new ArrayList<>();
+		for(Truck truck: trucks) {
+			if (truck.getTruckState() == truckState)
+				trucksFiltrados.add(truck);
+		}
+		return trucksFiltrados;
 	}
 }

@@ -2,9 +2,9 @@ package transporte;
 
 import java.util.ArrayList;
 
-public class Truck{
+public class Truck {
 	
-	public enum truckState {
+	public enum TruckState {
 		LOADING,
 		IN_TRANSIT,
 		DELIVERED
@@ -12,12 +12,14 @@ public class Truck{
 	
 	private int identificador;
 	private int volume;
-	private truckState truckState;
+	private int peso;
+	private TruckState truckState;
 	public ArrayList<Box> caixas;
 	
-	public Truck(truckState truckState, int volume, int identificador) {
+	public Truck(TruckState truckState, int volume, int peso, int identificador) {
 		this.truckState = truckState;
 		this.volume = volume;
+		this.peso = peso;
 		this.identificador = identificador;
 		caixas = new ArrayList<>();
 	}
@@ -29,12 +31,20 @@ public class Truck{
 	public void setVolume(int volume) {
 		this.volume = volume;
 	}
+	
+	public int getPeso() {
+		return peso;
+	}
 
-	public truckState getTruckState() {
+	public void setPeso(int peso) {
+		this.peso = peso;
+	}
+
+	public TruckState getTruckState() {
 		return truckState;
 	}
 
-	public void setTruckState(truckState truckState) {
+	public void setTruckState(TruckState truckState) {
 		this.truckState = truckState;
 	}
 	

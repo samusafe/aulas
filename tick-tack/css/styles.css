@@ -16,11 +16,7 @@ body {
 }
 
 .light-bg-color {
-  background-color: #FCF5EB;
-}
-
-.light-bg-color a:hover {
-  color: #e18709;
+  background-color: #FCF5EB
 }
 
 .dark-bg-color {
@@ -36,7 +32,11 @@ body {
 }
 
 .light-color {
-  color: #FCF5EB;
+  color: #FCF5EB
+}
+
+.dark-color{
+  color: black;
 }
 
 /* NAVBAR */
@@ -183,12 +183,17 @@ body {
   .carousel-caption h5 {
     font-size: 4em;
   }
+  .carousel-dark .carousel-caption{
+    color: #f9fafb;
+  }
 }
 
 /* MINI BANNERS */
 #mini-banners {
-  margin-top: -2em;
+  margin-top: 3em;
   z-index: 10;
+  margin-bottom: 20px;
+  
 }
 
 #mini-banners .col-12 {
@@ -224,7 +229,7 @@ body {
 
 #mini-banners .col-12 a {
   font-weight: bold;
-  color: #FFF;
+  color: rgb(255, 255, 255);
   font-size: .8rem;
   transition: .5s;
 }
@@ -247,7 +252,7 @@ body {
 
 /* BEST SELLERS */
 #best-sellers {
-  padding: 2em 0;
+  padding: 4em 0;
 }
 
 #best-sellers .row {
@@ -259,7 +264,7 @@ body {
 }
 
 .title {
-  font-weight: 400;
+  font-weight: 300;
   font-size: 1em;
   margin-bottom: 1em;
   text-align: center;
@@ -285,51 +290,10 @@ body {
   position: relative;
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 5em; 
+  font-size: 5em;
   top: 70px;
   left: 130px;
   margin-bottom: 3em;
-  text-align: center;
-  display: inline;
-}
-
-.title2 {
-  text-transform: uppercase;
-  font-weight: 900;
-  font-size: 2.5em;
-  text-align: left;
-}
-
-.title3 {
-  text-transform: uppercase;
-  font-weight: 800;
-  font-size: 1em;
-  text-align: center;
-}
-
-.title4 {
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 5em;
-  top: 100px;
-  left: 200px;
-  text-align: left;
-}
-
-.title5 {
-  text-transform: uppercase;
-  font-weight: 400;
-  font-size: 1em; 
-  top: 70px;
-  left: 340px;
-  text-align: left;
-}
-
-.title6 {
-  font-weight: 400;
-  font-size: 1em;
-  top: 200px;
-  left: 250px;
   text-align: left;
 }
 
@@ -448,10 +412,6 @@ body {
   border-color: #C09578;
 }
 
-#gallery .image-container:hover {
-  border-color: #C09578;
-}
-
 #insta1 {
   background-image: url('../img/insta1.jpg');
 }
@@ -557,7 +517,7 @@ body {
 }
 
 .icon-orange {
-  color: rgb(255, 153, 0);
+  color:rgb(255, 162, 0);
 }
 
 #social-container {
