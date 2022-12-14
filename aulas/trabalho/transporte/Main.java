@@ -115,7 +115,93 @@ public class Main {
 		addBox.setBounds(330, 290, 100, 100);
 		addBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawAddBoxMenu(truck);
+				DefaultListModel<Box> boxList = new DefaultListModel<>();
+				boxList.addAll(truck.getCaixas());
+				
+				JList<Box> listBox = new JList<>(boxList);
+				listBox.setLayoutOrientation(JList.VERTICAL);
+				
+				Object[] options = { "Adicionar", "Retirar", "Cancelar" };
+				
+		        int result = JOptionPane.showOptionDialog(frame, listBox, "Caixas", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+		        
+		        if (result == JOptionPane.YES_OPTION){
+		        	if (truck.getTruckState().equals(TruckState.IN_TRANSIT) || truck.getTruckState().equals(TruckState.DELIVERED)) {
+		    			showError("Não pode ser modificado neste estado");
+		    			return;
+		    		}
+		        	
+		        	JTextField ref2 = new JTextField();
+		        	JTextField peso2 = new JTextField();
+		        	JTextField comprimento2 = new JTextField();
+		        	JTextField altura2 = new JTextField();
+		        	JTextField largura2 = new JTextField();
+		        	
+		        	Object[] message = {
+		        	    "Referencia:", ref2,
+		        	    "Peso:", peso2,
+		        	    "Comprimento:", comprimento2,
+		        	    "Altura:", altura2,
+		        	    "Comprimento:", largura2
+		        	};
+
+		        	int option = JOptionPane.showConfirmDialog(frame, message, "Caixas", JOptionPane.OK_CANCEL_OPTION);
+		        	
+		        	if (option == JOptionPane.CLOSED_OPTION) {
+		        		return;
+		        	}
+		        	
+		        	if (ref2.getText().equals("")) {
+						showError("Insira referencia");
+						return;
+					}
+		        	if (peso2.getText().equals("")) {
+						showError("Insira um peso");
+						return;
+					}
+		        	if (comprimento2.getText().equals("")) {
+						showError("Insira um comprimento");
+						return;
+					}
+		        	if (altura2.getText().equals("")) {
+						showError("Insira uma altura");
+						return;
+					}
+		        	if (largura2.getText().equals("")) {
+						showError("Insira uma largura");
+						return;
+					}
+		        	
+		        	String largura1 = largura2.getText();
+		        	int largura = Integer.parseInt(largura1);
+
+		        	String altura1 = altura2.getText();
+		        	int altura = Integer.parseInt(altura1);
+
+		        	String comprimento1 = comprimento2.getText();
+		        	int comprimento = Integer.parseInt(comprimento1);
+
+		        	String peso1 = peso2.getText();
+		        	int peso = Integer.parseInt(peso1);
+
+		        	String reference = ref2.getText();
+		       
+		        	if (option == JOptionPane.OK_OPTION) {
+		        		gereTruck.addBox(reference, peso, comprimento, altura, largura, truck);
+		        	}
+		        }
+		        if (result == JOptionPane.NO_OPTION) {
+		        	if (truck.getTruckState().equals(TruckState.IN_TRANSIT)) {
+		    			showError("Não pode ser modificado neste estado");
+		    			return;
+		    		}
+		        	if (listBox.getSelectedIndex() != -1) {
+		        		gereTruck.takeBox(truck, listBox.getSelectedIndex());
+		        	} else {
+		        		showError("Seleciona uma caixa");
+		        		return;
+		        	}
+		        }
 			}
 		});
 		
@@ -145,6 +231,9 @@ public class Main {
 	}
 	
 	public void drawManageTruckMenu() {
+		JLabel imagem = new JLabel(backgroundImage);
+		imagem.setBounds(0, 0, 1020, 600);
+		
 		if (gereTruck.trucks.size() < 1) {
 			showError("Não há camiões no armazem");
 			return;
@@ -161,6 +250,9 @@ public class Main {
 		} else if (entrada == "DELIVERED") {
 			drawManageTruckListMenu(TruckState.DELIVERED);
 		}
+		
+		frame.add(imagem);
+		frame.repaint();
 	}
 	
 	public void drawManageTruckListMenu(TruckState truckState) {
@@ -188,97 +280,41 @@ public class Main {
         if (result == JOptionPane.YES_OPTION) {
         	if (listTruck.getSelectedIndex() == -1) {
         		showError("Escolha um camião");
+        		return;
         	} else {
         		drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
         	}
         } else if (result == JOptionPane.NO_OPTION) {
         	if (listTruck.getSelectedIndex() == -1) {
         		showError("Escolha um camião");
-        	} else {
-        		System.out.println("Yes");
-        	}
-        }
-	}
-	
-	public void drawAddBoxMenu(Truck truck) {
-		DefaultListModel<Box> boxList = new DefaultListModel<>();
-		boxList.addAll(truck.getCaixas());
-		
-		JList<Box> listBox = new JList<>(boxList);
-		listBox.setLayoutOrientation(JList.VERTICAL);
-		
-		Object[] options = { "Adicionar", "Remover", "Cancelar" };
-		
-        int result = JOptionPane.showOptionDialog(frame, listBox, "Caixas", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
-        
-        if (result == JOptionPane.YES_OPTION){
-        	JTextField ref2 = new JTextField();
-        	JTextField peso2 = new JTextField();
-        	JTextField comprimento2 = new JTextField();
-        	JTextField altura2 = new JTextField();
-        	JTextField largura2 = new JTextField();
-        	
-        	Object[] message = {
-        	    "Referencia:", ref2,
-        	    "Peso:", peso2,
-        	    "Comprimento:", comprimento2,
-        	    "Altura:", altura2,
-        	    "Comprimento:", largura2
-        	};
-
-        	int option = JOptionPane.showConfirmDialog(frame, message, "Caixas", JOptionPane.OK_CANCEL_OPTION);
-        	
-        	if (option == JOptionPane.CLOSED_OPTION) {
         		return;
-        	}
-        	
-        	if (ref2.getText().equals("")) {
-				showError("Insira referencia");
-				return;
-			}
-        	if (peso2.getText().equals("")) {
-				showError("Insira um peso");
-				return;
-			}
-        	if (comprimento2.getText().equals("")) {
-				showError("Insira um comprimento");
-				return;
-			}
-        	if (altura2.getText().equals("")) {
-				showError("Insira uma altura");
-				return;
-			}
-        	if (largura2.getText().equals("")) {
-				showError("Insira uma largura");
-				return;
-			}
-        	
-        	String largura1 = largura2.getText();
-        	int largura = Integer.parseInt(largura1);
-
-        	String altura1 = altura2.getText();
-        	int altura = Integer.parseInt(altura1);
-
-        	String comprimento1 = comprimento2.getText();
-        	int comprimento = Integer.parseInt(comprimento1);
-
-        	String peso1 = peso2.getText();
-        	int peso = Integer.parseInt(peso1);
-
-        	String reference = ref2.getText();
-       
-        	if (option == JOptionPane.OK_OPTION) {
-        		gereTruck.addBox(reference, peso, comprimento, altura, largura, truck);
-        	}
-        }
-        if (result == JOptionPane.NO_OPTION) {
-        	if (listBox.getSelectedIndex() != -1) {
-        		gereTruck.takeBox(truck, listBox.getSelectedIndex());
         	} else {
-        		showError("Seleciona uma caixa");
-        		return;
+        		String[] choices = { "LOADING", "IN_TRANSIT", "DELIVERED" };
+        		
+        		String entrada = (String) JOptionPane.showInputDialog(frame, "Escolha o estado que pretende definir", "Camiões", JOptionPane.YES_NO_OPTION, null, choices, null);
+        		
+        		if (entrada == "LOADING") {
+        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()).getTruckState().equals(TruckState.LOADING)) {
+        				showError("Ja se encontra nesse estado");
+        				return;
+        			}
+        			gereTruck.trucks.get(listTruck.getSelectedIndex()).setTruckState(TruckState.LOADING);
+        		} else if (entrada == "IN_TRANSIT") {
+        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()).getTruckState().equals(TruckState.IN_TRANSIT)) {
+        				showError("Ja se encontra nesse estado");
+        				return;
+        			}
+        			gereTruck.trucks.get(listTruck.getSelectedIndex()).setTruckState(TruckState.IN_TRANSIT);
+        		} else if (entrada == "DELIVERED") {
+        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()).getTruckState().equals(TruckState.DELIVERED)) {
+        				showError("Ja se encontra nesse estado");
+        				return;
+        			}
+        			gereTruck.trucks.get(listTruck.getSelectedIndex()).setTruckState(TruckState.DELIVERED);
+        		}
         	}
         }
+		frame.repaint();
 	}
 	
 	public void showError(String error) {

@@ -41,12 +41,12 @@ public class GereTruck {
 		}
 	}
 	
-	public String calculateTruck(Truck truck) {
+	public int calculateTruck(Truck truck) {
 		int peso = 0;
 		for (int i = 0; i < trucks.size(); i++) {
 			peso += truck.caixas.get(i).getPeso();
 		}
-		return "|| Peso - " + peso + "\n|| Volume - " + truck.getVolume();
+		return peso;
 	}
 	
 	public int calculateBoxVolume(int comprimento, int altura, int largura) {
