@@ -6,8 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-
-import transporte.Truck.TruckState;
+import enums.TruckState;
 
 public class Main {
 	
@@ -56,7 +55,7 @@ public class Main {
     	    "Peso:", pes2,
     	};
 
-    	int option = JOptionPane.showConfirmDialog(frame, message, "Caixas", JOptionPane.OK_CANCEL_OPTION);
+    	int option = JOptionPane.showConfirmDialog(frame, message, "Camiões", JOptionPane.OK_CANCEL_OPTION);
     	
     	if (option == JOptionPane.CLOSED_OPTION) {
     		return;
@@ -282,10 +281,10 @@ public class Main {
         		showError("Escolha um camião");
         		return;
         	} else {
-        		Truck truck = null;
-        		for (int i = 0; i < gereTruck.trucks.size(); i++) {
-        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()) == gereTruck.trucks.get(i)) {
-        				truck = gereTruck.trucks.get(i);
+        		Truck truck = truckList.get(listTruck.getSelectedIndex());
+        		for (int i = 0; i < truckList.size(); i++) {
+        			if (truck.equals(truckList.get(i))) {
+        				truck = truckList.get(i);
         				drawTruckMenu(truck, truck.getIdentificador());
         			}
         		}
@@ -300,9 +299,9 @@ public class Main {
         		String entrada = (String) JOptionPane.showInputDialog(frame, "Escolha o estado que pretende definir", "Camiões", JOptionPane.YES_NO_OPTION, null, choices, null);
         		
         		Truck truck = null;
-        		for (int i = 0; i < gereTruck.trucks.size(); i++) {
-        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()) == gereTruck.trucks.get(i)) {
-        				truck = gereTruck.trucks.get(i);
+        		for (int i = 0; i < truckList.size(); i++) {
+        			if (truckList.get(listTruck.getSelectedIndex()) == truckList.get(i)) {
+        				truck = truckList.get(i);
         			}
         		}
         		

@@ -1,19 +1,14 @@
 package transporte;
 
 import java.util.ArrayList;
+import enums.TruckState;
 
 public class Truck {
-	
-	public enum TruckState {
-		LOADING,
-		IN_TRANSIT,
-		DELIVERED
-	}
 	
 	private int identificador;
 	private int volume;
 	private int peso;
-	private TruckState truckState;
+	private TruckState truckState = TruckState.LOADING;
 	public ArrayList<Box> caixas;
 	
 	public Truck(TruckState truckState, int volume, int peso, int identificador) {

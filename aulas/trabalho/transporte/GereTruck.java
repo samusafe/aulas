@@ -1,8 +1,7 @@
 package transporte;
 
 import java.util.ArrayList;
-
-import transporte.Truck.TruckState;
+import enums.TruckState;
 
 public class GereTruck {
 	
