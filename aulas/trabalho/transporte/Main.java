@@ -282,7 +282,13 @@ public class Main {
         		showError("Escolha um camião");
         		return;
         	} else {
-        		drawTruckMenu(gereTruck.trucks.get(listTruck.getSelectedIndex()), listTruck.getSelectedIndex());
+        		Truck truck = null;
+        		for (int i = 0; i < gereTruck.trucks.size(); i++) {
+        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()) == gereTruck.trucks.get(i)) {
+        				truck = gereTruck.trucks.get(i);
+        				drawTruckMenu(truck, truck.getIdentificador());
+        			}
+        		}
         	}
         } else if (result == JOptionPane.NO_OPTION) {
         	if (listTruck.getSelectedIndex() == -1) {
@@ -293,28 +299,35 @@ public class Main {
         		
         		String entrada = (String) JOptionPane.showInputDialog(frame, "Escolha o estado que pretende definir", "Camiões", JOptionPane.YES_NO_OPTION, null, choices, null);
         		
+        		Truck truck = null;
+        		for (int i = 0; i < gereTruck.trucks.size(); i++) {
+        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()) == gereTruck.trucks.get(i)) {
+        				truck = gereTruck.trucks.get(i);
+        			}
+        		}
+        		
         		if (entrada == "LOADING") {
-        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()).getTruckState().equals(TruckState.LOADING)) {
+        			if (truck.getTruckState().equals(TruckState.LOADING)) {
         				showError("Ja se encontra nesse estado");
         				return;
         			}
-        			gereTruck.trucks.get(listTruck.getSelectedIndex()).setTruckState(TruckState.LOADING);
+        			truck.setTruckState(TruckState.LOADING);
         		} else if (entrada == "IN_TRANSIT") {
-        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()).getTruckState().equals(TruckState.IN_TRANSIT)) {
+        			if (truck.getTruckState().equals(TruckState.IN_TRANSIT)) {
         				showError("Ja se encontra nesse estado");
         				return;
         			}
-        			gereTruck.trucks.get(listTruck.getSelectedIndex()).setTruckState(TruckState.IN_TRANSIT);
+        			truck.setTruckState(TruckState.IN_TRANSIT);
         		} else if (entrada == "DELIVERED") {
-        			if (gereTruck.trucks.get(listTruck.getSelectedIndex()).getTruckState().equals(TruckState.DELIVERED)) {
+        			if (truck.getTruckState().equals(TruckState.DELIVERED)) {
         				showError("Ja se encontra nesse estado");
         				return;
         			}
-        			gereTruck.trucks.get(listTruck.getSelectedIndex()).setTruckState(TruckState.DELIVERED);
+        			truck.setTruckState(TruckState.DELIVERED);
         		}
         	}
-        }
 		frame.repaint();
+        }
 	}
 	
 	public void showError(String error) {
