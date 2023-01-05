@@ -3,12 +3,8 @@
 }
 
 body {
-     color: #666666;
-     font-size: 14px;
-     font-family: 'Noto Serif', sans-serif;;
-     line-height: 1.80857;
-     font-weight: normal;
-     overflow-x: hidden;
+  background-color: #003E61;
+  color: #FFF;
 }
 
 .primary-bg-color {
@@ -414,30 +410,6 @@ body {
 
 #gallery .image-container:hover {
   border-color: #C09578;
-}
-
-#insta1 {
-  background-image: url('../img/insta1.jpg');
-}
-
-#insta2 {
-  background-image: url('../img/insta2.jpg');
-}
-
-#insta3 {
-  background-image: url('../img/insta3.jpg');
-}
-
-#insta4 {
-  background-image: url('../img/insta4.jpg');
-}
-
-#insta5 {
-  background-image: url('../img/insta5.jpg');
-}
-
-#insta6 {
-  background-image: url('../img/insta6.jpg');
 }
 
 /* FOOTER */
