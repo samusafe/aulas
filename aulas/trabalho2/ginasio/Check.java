@@ -3,9 +3,9 @@ package ginasio;
 public class Check {
 
 	private String check;
-	private Conta user;
+	private User user;
 	
-	public Check(String check, Conta user) {
+	public Check(String check, User user) {
 		this.check = check;
 		this.user = user;
 	}
@@ -18,11 +18,11 @@ public class Check {
 		this.check = check;
 	}
 
-	public Conta getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(Conta user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 }
