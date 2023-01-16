@@ -1,8 +1,5 @@
 package ginasio;
 
-import java.util.ArrayList;
-
-import enums.UserType;
 import enums.ContratoType;
 
 public class User {
@@ -12,20 +9,15 @@ public class User {
 	private String password;
 	private String nome;
 	private int numero;
-	private UserType userType;
-	private ContratoType contratoType;
-	
-	ArrayList<Check> checks = new ArrayList<>();
+	protected Contrato contrato;
 
-	public User(int id, String email, String password, String nome, int numero, UserType userType, ContratoType contratoType) {
+	public User(int id, String email, String password, String nome, int numero) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.nome = nome;
 		this.numero = numero;
-		this.userType = userType;
-		this.contratoType = contratoType;
-		checks = new ArrayList<>();
+		contrato = new Contrato(this, null, null, ContratoType.NULL);
 	}
 	
 	public int getId() {
@@ -75,39 +67,13 @@ public class User {
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setClienteType(UserType userType) {
-		this.userType = userType;
-	}
-
-	public ContratoType getContratoType() {
-		return contratoType;
-	}
-
-	public void setContratoType(ContratoType contratoType) {
-		this.contratoType = contratoType;
-	}
 	
-	public ArrayList<Check> getCheck() {
-		return checks;
+	public Contrato getContrato() {
+		return contrato;
 	}
-	
-	public boolean hasCheck() {
-		return checks.size() > 0;
-	}
-	
-	public void addCheck(Check check) {
-		for (int i = 0; i < checks.size(); i++) {
-			if (checks.get(i).getUser() == check.getUser()) {
-				checks.set(i, check);
-				return;
-			}
-		}
-		checks.add(check);
+
+	public void setContrato(Contrato contrato) {
+		this.contrato = contrato;
 	}
 
 	@Override
@@ -126,5 +92,4 @@ public class User {
         		&& c.getPassword().equals(getPassword())
         		&& c.getNumero() == getNumero();
 	}
-
 }

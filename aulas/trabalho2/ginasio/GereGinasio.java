@@ -2,42 +2,29 @@ package ginasio;
 
 import java.util.ArrayList;
 
-import enums.UserType;
 import enums.ContratoType;
 
 interface Methods {
 	public boolean criarConta(int id, String email, char[] password, String nome, int numero);
 	public User entrarSistema(String nome, char[] password);
-	public void validateEntryOut(String check, User conta);
-	public void notifyTrain(User conta);
-	
-	public ArrayList<User> users = new ArrayList<>();
-	public ArrayList<User> clientes = new ArrayList<>();
-	public ArrayList<User> clientesVip = new ArrayList<>();
-	public ArrayList<User> colaboradores = new ArrayList<>();
-	public ArrayList<User> trainers = new ArrayList<>();
+	public void addEntryOut(String newCheck, User user);
+	public User getClientByName(String name);
+	public boolean bookSession(User user, String data, String hora, User trainer);
+	public void editContrato(User user, ContratoType contratoType);
 }
 
 class GereGinasio implements Methods {
-
+	
+	public ArrayList<User> users = new ArrayList<>();
+	public ArrayList<Contrato> contratos = new ArrayList<>();
+	
 	public boolean criarConta(int id, String email, char[] password, String nome, int numero) {
-		User user = new User(id, email, joinCharArray(password), nome, numero,
-				UserType.NORMAL, ContratoType.NULL);
+		User user = new User(id, email, joinCharArray(password), nome, numero);
 		
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).equals(user)) {
 				return false;
 			}
-		}
-		
-		if (user.getUserType().equals(UserType.NORMAL)) {
-			clientes.add(user);
-		} else if (user.getUserType().equals(UserType.VIP)) {
-			clientesVip.add(user);
-		} else if (user.getUserType().equals(UserType.COLABORADOR)) {
-			colaboradores.add(user);
-		} else if (user.getUserType().equals(UserType.TRAINER)) {
-			trainers.add(user);
 		}
 		
 		return users.add(user);
@@ -66,16 +53,45 @@ class GereGinasio implements Methods {
 		return pw;
 	}
 	
-	public void validateEntryOut(String newCheck, User user) {
-		Check check = new Check(newCheck, user);
+	public void addEntryOut(String newLog, User user) {
+		EntryOut entryOut = new EntryOut(newLog, user);
 		for (int i = 0; i < users.size(); i++) {
 			if (user.equals(users.get(i))) {
-				users.get(i).addCheck(check);
+				if (user instanceof Colaborador) {
+					((Colaborador) users.get(i)).addCheck(entryOut);
+				}
 			}
 		}
 	}
 	
-	public void notifyTrain(User cliente) {
-		
+	public User getClientByName(String name) {
+		for (int i = 0; i < users.size(); i++) {
+			if (name.equals(users.get(i).getNome())) {
+				return users.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public boolean bookSession(User user, String data, String hora, User trainer) {
+		Sessao sessao = new Sessao(user, data, hora, trainer);
+		for (int i = 0; i < users.size(); i++) {
+			if (user instanceof Colaborador) {
+				if (((Colaborador) users.get(i)).isAvailable() != false) {
+					return ((Colaborador) users.get(i)).addSessoes(sessao);
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void editContrato(User user, ContratoType contratoType) {
+		for (int i = 0; i < users.size(); i++) {
+			if (user.equals(users.get(i))) {
+				if (contratoType != user.getContrato().getContratoType()) {
+					user.getContrato().setContratoType(contratoType);
+				}
+			}
+		}
 	}
 }
