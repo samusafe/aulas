@@ -1,5 +1,7 @@
 package ginasio;
 
+import java.awt.Color;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -12,6 +14,7 @@ public class MyFrame extends JFrame {
 		this.setSize(380,600);
 		this.setLayout(null);
 		this.setVisible(true);
+		this.getContentPane().setBackground(Color.WHITE);
 		this.setResizable(false);
 		this.setTitle(nome);
 		this.getContentPane().setLayout(null);
