@@ -12,7 +12,7 @@ import javax.swing.Timer;
 
 public class SplashScreen extends Main {
 	
-	ImageIcon imagemLoad = new ImageIcon(getClass().getResource("/img/splash.gif"));
+	ImageIcon imagemLoad = new ImageIcon(getClass().getResource("/img/pullup.gif"));
 	JProgressBar progressBar = new JProgressBar();
 
     public SplashScreen() {
@@ -23,7 +23,7 @@ public class SplashScreen extends Main {
     
     public void addImage(){
     	JLabel imagem = new JLabel(imagemLoad);
-		imagem.setBounds(0, 0, 380, 440);
+		imagem.setBounds(0, 0, 380, 480);
 		
         frame.add(imagem);
         frame.repaint();
@@ -40,7 +40,7 @@ public class SplashScreen extends Main {
     }
     
     public void runningPBar() {
-    	Timer timer = new Timer(35, new ActionListener() {
+    	Timer timer = new Timer(20, new ActionListener() {
 
             private int count = 0;
 

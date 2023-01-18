@@ -7,10 +7,13 @@ public class Colaborador extends User {
 	private boolean available;
 	private ArrayList<EntryOut> checks = new ArrayList<>();
 	private ArrayList<Sessao> sessoes = new ArrayList<>();
+	private boolean notify;
 	
-	public Colaborador(int id, String email, String password, String nome, int numero, boolean available) {
+	public Colaborador(int id, String email, String password, String nome, int numero,
+			boolean available, boolean notify) {
 		super(id, email, password, nome, numero);
 		this.available = available;
+		this.notify = notify;
 		contrato = getContrato();
 		checks = new ArrayList<>();
 		sessoes = new ArrayList<>();
@@ -52,5 +55,13 @@ public class Colaborador extends User {
 	
 	public boolean hasSessoes() {
 		return sessoes.size() > 0;
+	}
+
+	public boolean isNotify() {
+		return notify;
+	}
+
+	public void setNotify(boolean notify) {
+		this.notify = notify;
 	}
 }

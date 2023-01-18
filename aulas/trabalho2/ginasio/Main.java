@@ -76,8 +76,8 @@ public class Main {
 		frame.add(slogan2);
 		frame.add(slogan3);
 		frame.add(slogan4);
-		//frame.add(criar);
-		//frame.add(login);
+		frame.add(criar);
+		frame.add(login);
 		frame.add(imagemFundo);
 		frame.repaint();
 	}
