@@ -16,31 +16,15 @@ public class SplashScreen extends Main {
 	JProgressBar progressBar = new JProgressBar();
 
     public SplashScreen() {
-    		addImage();
-            addProgressBar();
-            runningPBar();
-    }
-    
-    public void addImage(){
     	JLabel imagem = new JLabel(imagemLoad);
 		imagem.setBounds(0, 0, 380, 480);
-		
-        frame.add(imagem);
-        frame.repaint();
-    }
-    
-    public void addProgressBar() {
+        
         progressBar.setBounds(20,480,320,30);	
         progressBar.setBackground(Color.WHITE);
         progressBar.setForeground(Color.LIGHT_GRAY);
         progressBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.CYAN));
         
-        frame.add(progressBar);
-        frame.repaint();
-    }
-    
-    public void runningPBar() {
-    	Timer timer = new Timer(20, new ActionListener() {
+        Timer timer = new Timer(20, new ActionListener() {
 
             private int count = 0;
 
@@ -49,10 +33,14 @@ public class SplashScreen extends Main {
             	progressBar.setValue(count);
                 count++;
                 if (count >= 100) {
-                    drawMainMenu();
+                	drawMainMenu();
                 }
             }
         });
         timer.start();
+        
+        frame.add(imagem);
+        frame.add(progressBar);
+        frame.repaint();
     }
 }
