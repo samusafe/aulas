@@ -8,15 +8,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.Timer;
 
 public class Main {
 	
 	protected MyFrame frame = new MyFrame("FitnessHUB");
 	private ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/img/gym.jpg"));
+	private ImageIcon imagemLoad = new ImageIcon(getClass().getResource("/img/pullup.gif"));
 	private ImageIcon backIcon = new ImageIcon(getClass().getResource("/img/back.png"));
 	private ImageIcon bicepIcon = new ImageIcon(getClass().getResource("/img/bicep.png"));
 	private ImageIcon calendarioIcon = new ImageIcon(getClass().getResource("/img/calendario.png"));
@@ -266,7 +270,7 @@ public class Main {
 		
 		JLabel text2 = new JLabel("<html>Segunda-feira ‏ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ 07:00-23:00 <br> Terça-feira ‏‏‎ ‎‏‏‎ ‎‏‏‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎ 07:00-23:00 <br> Quarta-feira ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‏‏‎ ‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‎07:00-23:00"
 				+ " <br> Quinta-feira ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎ 07:00-23:00 <br> Sexta-feira ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ 07:00-23:00 </html>");
-		text2.setBounds(40, 150, 220, 120);
+		text2.setBounds(40, 150, 240, 120);
 		text2.setForeground (Color.WHITE);
 		
 		JLabel text3 = new JLabel("Sábados e Domingos");
@@ -274,7 +278,7 @@ public class Main {
 		text3.setForeground (Color.CYAN);
 		
 		JLabel text4 = new JLabel("<html>Sábados ‏ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎ ‎‏‏‎‎‏‏‎‎‏‏‎ ‎‏‏‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎ ‎‏‏‎‎ 08:00-20:00 <br> Domingos ‏‏‎ ‎‏‏‎ ‎‏‏‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎ 09:00-19:00</html>");
-		text4.setBounds(40, 310, 220, 60);
+		text4.setBounds(40, 310, 240, 60);
 		text4.setForeground (Color.WHITE);
 		
 		JLabel text5 = new JLabel("Feriados e Épocas Festivas");
@@ -492,10 +496,42 @@ public class Main {
 		errorFrame.setVisible(true);
 	}
 	
+	public void SplashScreen() {
+		frame.getContentPane().removeAll();
+		
+    	JLabel imagem = new JLabel(imagemLoad);
+		imagem.setBounds(0, 0, 380, 480);
+        
+		JProgressBar progressBar = new JProgressBar();
+        progressBar.setBounds(20,480,320,30);	
+        progressBar.setBackground(Color.WHITE);
+        progressBar.setForeground(Color.LIGHT_GRAY);
+        progressBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.CYAN));
+        
+        Timer timer = new Timer(20, new ActionListener() {
+
+            private int count = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	progressBar.setValue(count);
+                count++;
+                if (count >= 100) {
+                	drawMainMenu();
+                }
+            }
+        });
+        
+        timer.start();
+        
+        frame.add(imagem);
+        frame.add(progressBar);
+        frame.repaint();
+    }
+	
 	public static void main(String[] args) {
 		Main menu = new Main();
 		menu.drawMainMenu();
-		//SplashScreen splashScreen = new SplashScreen();
 	}
 }
 	  
