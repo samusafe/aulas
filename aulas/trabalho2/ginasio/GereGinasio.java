@@ -7,7 +7,6 @@ import enums.ContratoType;
 interface Methods {
 	public boolean criarConta(int id, String email, char[] password, String nome, int numero);
 	public User entrarSistema(String nome, char[] password);
-	public void addEntryOut(String newCheck, User user);
 	public void notifyTrainer(User user, String data);
 	public User getClientByName(String name);
 	public boolean bookSession(User user, String data, String hora, User trainer);
@@ -52,19 +51,6 @@ class GereGinasio implements Methods {
 		}
 		
 		return pw;
-	}
-	
-	public void addEntryOut(String newLog, User user) {
-		EntryOut entryOut = new EntryOut(newLog, user);
-		for (int i = 0; i < users.size(); i++) {
-			if (user.equals(users.get(i))) {
-				if (user instanceof Colaborador) {
-					((Colaborador) users.get(i)).addCheck(entryOut);
-				} else if (user instanceof VIP) {
-					notifyTrainer((VIP) users.get(i), newLog);
-				}
-			}
-		}
 	}
 	
 	public void notifyTrainer(User user, String data) {

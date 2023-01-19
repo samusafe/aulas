@@ -1,25 +1,39 @@
 package ginasio;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.EmptyBorder;
 
 public class Main {
 	
 	protected MyFrame frame = new MyFrame("FitnessHUB");
 	private ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/img/gym.jpg"));
+	private ImageIcon showPasswordImage = new ImageIcon(getClass().getResource("/img/showpassword.png"));
 	private ImageIcon imagemLoad = new ImageIcon(getClass().getResource("/img/pullup.gif"));
 	private ImageIcon backIcon = new ImageIcon(getClass().getResource("/img/back.png"));
 	private ImageIcon bicepIcon = new ImageIcon(getClass().getResource("/img/bicep.png"));
@@ -64,7 +78,7 @@ public class Main {
 		conta.setFocusable(false);
 		conta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showError("ola");
+				drawAccountMenu();
 			}
 		});
 		
@@ -101,6 +115,181 @@ public class Main {
 		frame.repaint();
 	}
 	
+	public void drawAccountMenu() {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawMainMenu();
+			}
+		});
+		
+		JLabel contaTitle = new JLabel("Conta");
+		contaTitle.setBounds(80, 25, 280, 47);
+		contaTitle.setForeground(Color.WHITE);
+		
+		JLabel gymIcon = new JLabel(weightIcon);
+		gymIcon.setBounds(160, 120, 47, 47);
+		
+		JLabel emailLabel = new JLabel("Email");
+		emailLabel.setBounds(80, 180, 160, 47);
+		emailLabel.setForeground(Color.WHITE);
+		
+		JTextField emailTextField = new JTextField("");
+		emailTextField.setBounds(70, 220, 220, 47);
+		emailTextField.setBackground(Color.WHITE);
+		emailTextField.setForeground(Color.BLACK);
+		emailTextField.setColumns(30);
+		emailTextField.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		JLabel passwordLabel = new JLabel("Password");
+		passwordLabel.setBounds(80, 280, 160, 47);
+		passwordLabel.setForeground(Color.WHITE);
+		
+		JPasswordField passwordTextField = new JPasswordField("");
+		passwordTextField.setBounds(70, 320, 220, 47);
+		passwordTextField.setBackground(Color.WHITE);
+		passwordTextField.setForeground(Color.BLACK);
+		passwordTextField.setColumns(30);
+		passwordTextField.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		JButton showPasswordIcon = new JButton(showPasswordImage);
+		showPasswordIcon.setBounds(290, 330, 30, 30);
+		showPasswordIcon.setBorder(null);
+		showPasswordIcon.setOpaque(false);
+		showPasswordIcon.setContentAreaFilled(false);
+		showPasswordIcon.setBorderPainted(false);
+		showPasswordIcon.setFocusable(false);
+		showPasswordIcon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (passwordTextField.getEchoChar() == (char)0) {
+					passwordTextField.setEchoChar('\u2022');
+				} else if (passwordTextField.getEchoChar() == ('\u2022')) {
+					passwordTextField.setEchoChar((char)0);
+				}
+			}
+		});
+		
+		JLabel haveAccount = new JLabel("<html> <u> Ainda não tens conta?</u> </html>");
+		haveAccount.setBounds(80, 350, 160, 50);
+		haveAccount.setForeground(Color.WHITE);
+		haveAccount.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		haveAccount.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				drawCreateAccount();
+			}
+		});
+		
+		JButton entrar = new JButton("Entrar");
+		entrar.setBounds(240, 410, 90, 40);
+		entrar.setBackground(Color.CYAN);
+		entrar.setForeground(Color.BLACK);
+		entrar.setFocusable(false);
+		entrar.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		entrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (emailTextField.getText().equals("")) {
+					showError("Insira nome");
+					return;
+				}
+				if (passwordTextField.getPassword().length == 0) {
+					showError("Insira password");
+					return;
+				}
+				if (!gereGinasio.hasUsers()) {
+					showError("Nenhuma conta criada");
+					return;
+				}
+				else {
+					User user = gereGinasio.entrarSistema(emailTextField.getText(), passwordTextField.getPassword());
+					if (user == null) {
+						showError("Conta não existe");
+						return;
+					}
+					
+					if  (user instanceof Colaborador) {
+						//drawColabMenu(user);
+					} else if (user instanceof VIP) {
+						//drawVipMenu(user);
+					} else {
+						//drawUserMenu(user);
+					}
+				}
+			}
+		});
+		
+		try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            emailLabel.setFont(font.deriveFont(Font.ITALIC, 24f));
+            passwordLabel.setFont(font.deriveFont(Font.ITALIC, 24f));
+            haveAccount.setFont(font.deriveFont(Font.PLAIN, 16f));
+            entrar.setFont(font.deriveFont(Font.PLAIN, 14f));
+            contaTitle.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(emailLabel);
+		frame.add(emailTextField);
+		frame.add(passwordLabel);
+		frame.add(passwordTextField);
+		frame.add(haveAccount);
+		frame.add(contaTitle);
+		frame.add(entrar);
+		frame.add(gymIcon);
+		frame.add(showPasswordIcon);
+		frame.add(back);
+		frame.repaint();
+	}
+	
+	public void drawCreateAccount() {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawAccountMenu();
+			}
+		});
+		
+		JLabel contaTitle = new JLabel("Conta");
+		contaTitle.setBounds(80, 25, 280, 47);
+		contaTitle.setForeground(Color.WHITE);
+		
+		try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            contaTitle.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(contaTitle);
+		frame.add(back);
+		frame.repaint();
+	}
+	
 	public void drawGinasioMenu() {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -127,6 +316,10 @@ public class Main {
 		horario.setBackground(Color.CYAN);
 		horario.setForeground(Color.BLACK);
 		horario.setFocusable(false);
+		horario.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
 		horario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawHorarioMenu();
@@ -151,6 +344,10 @@ public class Main {
 		contratos.setBackground(Color.CYAN);
 		contratos.setForeground(Color.BLACK);
 		contratos.setFocusable(false);
+		contratos.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
 		contratos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawContratosMenu();
@@ -175,6 +372,10 @@ public class Main {
 		primeirosSocorros.setBackground(Color.CYAN);
 		primeirosSocorros.setForeground(Color.BLACK);
 		primeirosSocorros.setFocusable(false);
+		primeirosSocorros.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
 		primeirosSocorros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawHealthMenu();
@@ -199,6 +400,10 @@ public class Main {
 		personalTrainers.setBackground(Color.CYAN);
 		personalTrainers.setForeground(Color.BLACK);
 		personalTrainers.setFocusable(false);
+		personalTrainers.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
 		personalTrainers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawTrainersMenu();
@@ -223,7 +428,7 @@ public class Main {
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
             horario.setFont(font.deriveFont(Font.ITALIC, 22f));
             contratos.setFont(font.deriveFont(Font.ITALIC, 22f));
-            primeirosSocorros.setFont(font.deriveFont(Font.ITALIC, 20f));
+            primeirosSocorros.setFont(font.deriveFont(Font.ITALIC, 18f));
             personalTrainers.setFont(font.deriveFont(Font.ITALIC, 22f));
             ginasioTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
         } catch (FontFormatException | IOException ex) {
@@ -334,11 +539,19 @@ public class Main {
 		contratosTitle.setBounds(80, 25, 280, 47);
 		contratosTitle.setForeground(Color.WHITE);
 		
+		JLabel contratosSubTitle = new JLabel("Tipos de acesso");
+		contratosSubTitle.setBounds(60, 120, 240, 47);
+		contratosSubTitle.setForeground(Color.WHITE);
+		
 		JButton button1 = new JButton("Acesso básico");
-		button1.setBounds(60, 160, 240, 60);
+		button1.setBounds(60, 190, 240, 60);
 		button1.setBackground(Color.CYAN);
 		button1.setForeground(Color.BLACK);
 		button1.setFocusable(false);
+		button1.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
 		button1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawContratosMenu();
@@ -355,11 +568,11 @@ public class Main {
 		});
 		
 		JLabel moreInfo = new JLabel("");
-		moreInfo.setBounds(110, 230, 280, 47);
+		moreInfo.setBounds(110, 260, 280, 47);
 		moreInfo.setForeground(Color.WHITE);
 		
 		JButton info = new JButton(infoIcon);
-		info.setBounds(70, 230, 30, 30);
+		info.setBounds(70, 260, 30, 30);
 		info.setBorder(null);
 		info.setOpaque(false);
 		info.setContentAreaFilled(false);
@@ -376,10 +589,14 @@ public class Main {
 		});
 		
 		JButton button2 = new JButton("Acesso completo");
-		button2.setBounds(60, 340, 240, 60);
+		button2.setBounds(60, 330, 240, 60);
 		button2.setBackground(Color.CYAN);
 		button2.setForeground(Color.BLACK);
 		button2.setFocusable(false);
+		button2.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawContratosMenu();
@@ -396,11 +613,11 @@ public class Main {
 		});
 		
 		JLabel moreInfo2 = new JLabel("");
-		moreInfo2.setBounds(110, 420, 280, 70);
+		moreInfo2.setBounds(110, 410, 280, 70);
 		moreInfo2.setForeground(Color.WHITE);
 		
 		JButton info2 = new JButton(infoIcon);
-		info2.setBounds(70, 410, 30, 30);
+		info2.setBounds(70, 400, 30, 30);
 		info2.setBorder(null);
 		info2.setOpaque(false);
 		info2.setContentAreaFilled(false);
@@ -417,6 +634,53 @@ public class Main {
 		    }
 		});
 		
+		AtomicInteger count = new AtomicInteger(1);
+		
+		JLabel page = new JLabel("Pagina " + count.get() + "/3");
+		page.setBounds(130, 500, 100, 47);
+		page.setForeground(Color.WHITE);
+		
+		JButton goBack = new JButton("<<");
+		goBack.setBounds(95, 515, 20, 20);
+		goBack.setBorder(null);
+		goBack.setOpaque(false);
+		goBack.setContentAreaFilled(false);
+		goBack.setBorderPainted(false);
+		goBack.setFocusable(false);
+		goBack.setForeground(Color.WHITE);
+		goBack.setVisible(false);
+		
+		JButton goForward = new JButton(">>");
+		goForward.setBounds(240, 515, 20, 20);
+		goForward.setBorder(null);
+		goForward.setOpaque(false);
+		goForward.setContentAreaFilled(false);
+		goForward.setBorderPainted(false);
+		goForward.setFocusable(false);
+		goForward.setForeground(Color.WHITE);
+		
+		goForward.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				count.incrementAndGet();
+				goBack.setVisible(true);
+				if (count.get() >= 3) {
+					goForward.setVisible(false);
+				}
+				page.setText("Pagina " + count.get() + "/3");
+			}
+		});
+		
+		goBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				count.decrementAndGet();
+				goForward.setVisible(true);
+				if (count.get() <= 1) {
+					goBack.setVisible(false);
+				}
+				page.setText("Pagina " + count.get() + "/3");
+			}
+		});
+		
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
@@ -424,6 +688,8 @@ public class Main {
             button2.setFont(font.deriveFont(Font.ITALIC, 24f));
             moreInfo.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
             moreInfo2.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
+            page.setFont(font.deriveFont(Font.PLAIN, 20f));
+            contratosSubTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 32f));
             contratosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
         } catch (FontFormatException | IOException ex) {
             ex.printStackTrace();
@@ -433,9 +699,13 @@ public class Main {
 		frame.add(button2);
 		frame.add(moreInfo);
 		frame.add(moreInfo2);
+		frame.add(contratosSubTitle);
 		frame.add(contratosTitle);
 		frame.add(info);
 		frame.add(info2);
+		frame.add(page);
+		frame.add(goForward);
+		frame.add(goBack);
 		frame.add(back);
 		frame.repaint();
 	}
@@ -496,37 +766,17 @@ public class Main {
 		errorFrame.setVisible(true);
 	}
 	
-	public void SplashScreen() {
-		frame.getContentPane().removeAll();
-		
-    	JLabel imagem = new JLabel(imagemLoad);
-		imagem.setBounds(0, 0, 380, 480);
-        
-		JProgressBar progressBar = new JProgressBar();
-        progressBar.setBounds(20,480,320,30);	
-        progressBar.setBackground(Color.WHITE);
-        progressBar.setForeground(Color.LIGHT_GRAY);
-        progressBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.CYAN));
-        
-        Timer timer = new Timer(20, new ActionListener() {
-
-            private int count = 0;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	progressBar.setValue(count);
-                count++;
-                if (count >= 100) {
-                	drawMainMenu();
-                }
-            }
-        });
-        
-        timer.start();
-        
-        frame.add(imagem);
-        frame.add(progressBar);
-        frame.repaint();
+	@SuppressWarnings("serial")
+    class CustomeBorder extends AbstractBorder{
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y,
+                int width, int height) {
+            super.paintBorder(c, g, x, y, width, height);
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.setStroke(new BasicStroke(12));
+            g2d.setColor(Color.DARK_GRAY);
+            g2d.drawRoundRect(x, y, width - 1, height - 1, 25, 25);
+        }   
     }
 	
 	public static void main(String[] args) {
