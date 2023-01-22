@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import enums.ContratoType;
 
 interface Methods {
-	public boolean criarConta(int id, String email, char[] password, String nome, int numero);
+	public boolean criarConta(int id, String email, char[] password, String nome, String numero);
 	public User entrarSistema(String nome, char[] password);
-	public void notifyTrainer(User user, String data);
 	public User getClientByName(String name);
 	public boolean bookSession(User user, String data, String hora, User trainer);
 	public void editContrato(User user, ContratoType contratoType);
@@ -18,11 +17,11 @@ class GereGinasio implements Methods {
 	public ArrayList<User> users = new ArrayList<>();
 	public ArrayList<Contrato> contratos = new ArrayList<>();
 	
-	public boolean criarConta(int id, String email, char[] password, String nome, int numero) {
+	public boolean criarConta(int id, String email, char[] password, String nome, String numero) {
 		User user = new User(id, email, joinCharArray(password), nome, numero);
 		
 		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).equals(user)) {
+			if (users.get(i).getEmail().equals(user.getEmail()) || users.get(i).getNumero().equals(user.getNumero())) {
 				return false;
 			}
 		}
@@ -30,9 +29,9 @@ class GereGinasio implements Methods {
 		return users.add(user);
 	}
 
-	public User entrarSistema(String nome, char[] password) {
+	public User entrarSistema(String email, char[] password) {
 		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).getNome().equals(nome) 
+			if (users.get(i).getEmail().equals(email)
 					&& users.get(i).getPassword().equals(joinCharArray(password))) {
 					return users.get(i);
 			}
@@ -51,20 +50,6 @@ class GereGinasio implements Methods {
 		}
 		
 		return pw;
-	}
-	
-	public void notifyTrainer(User user, String data) {
-		for (int i = 0; i < users.size(); i++) {
-			if (user.equals(users.get(i))) {
-				if (user instanceof Colaborador) {
-					for (int j = 0; j < ((Colaborador) user).getSessoes().size(); i++ ) {
-						if (((Colaborador) user).getSessoes().get(i).getData().equals(data)) {
-							((Colaborador) user).setNotify(true);
-						}
-					}
-				}
-			}
-		}
 	}
 	
 	public User getClientByName(String name) {

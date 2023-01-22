@@ -1,5 +1,7 @@
 package ginasio;
 
+import enums.AcessType;
+import enums.ClientType;
 import enums.ContratoType;
 
 public class User {
@@ -8,16 +10,16 @@ public class User {
 	private String email;
 	private String password;
 	private String nome;
-	private int numero;
+	private String numero;
 	protected Contrato contrato;
 
-	public User(int id, String email, String password, String nome, int numero) {
+	public User(int id, String email, String password, String nome, String numero) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.nome = nome;
 		this.numero = numero;
-		contrato = new Contrato(this, null, null, ContratoType.NULL);
+		contrato = new Contrato(this, null, null, AcessType.NULL, ContratoType.NULL, ClientType.NULL);
 	}
 	
 	public int getId() {
@@ -59,12 +61,12 @@ public class User {
 	}
 
 
-	public int getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
 
-	public void setNumero(int numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 	
@@ -89,6 +91,7 @@ public class User {
         User c = (User) o;
       
         return c.getNome().equals(getNome())
+        		&& c.getEmail().equals(getEmail())
         		&& c.getPassword().equals(getPassword())
         		&& c.getNumero() == getNumero();
 	}

@@ -8,7 +8,7 @@ public class Colaborador extends User {
 	private ArrayList<Sessao> sessoes = new ArrayList<>();
 	private boolean notify;
 	
-	public Colaborador(int id, String email, String password, String nome, int numero,
+	public Colaborador(int id, String email, String password, String nome, String numero,
 			boolean available, boolean notify) {
 		super(id, email, password, nome, numero);
 		this.available = available;

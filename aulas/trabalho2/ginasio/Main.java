@@ -23,22 +23,22 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
+
+import enums.ContratoType;
 
 public class Main {
 	
 	protected MyFrame frame = new MyFrame("FitnessHUB");
 	private ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/img/gym.jpg"));
 	private ImageIcon showPasswordImage = new ImageIcon(getClass().getResource("/img/showpassword.png"));
-	private ImageIcon imagemLoad = new ImageIcon(getClass().getResource("/img/pullup.gif"));
 	private ImageIcon backIcon = new ImageIcon(getClass().getResource("/img/back.png"));
 	private ImageIcon bicepIcon = new ImageIcon(getClass().getResource("/img/bicep.png"));
 	private ImageIcon calendarioIcon = new ImageIcon(getClass().getResource("/img/calendario.png"));
 	private ImageIcon contaIcon = new ImageIcon(getClass().getResource("/img/conta.png"));
+	private ImageIcon editIcon = new ImageIcon(getClass().getResource("/img/edit.png"));
 	private ImageIcon contratoIcon = new ImageIcon(getClass().getResource("/img/contratos.png"));
 	private ImageIcon healthIcon = new ImageIcon(getClass().getResource("/img/health.png"));
 	private ImageIcon trainersIcon = new ImageIcon(getClass().getResource("/img/trainers.png"));
@@ -82,6 +82,8 @@ public class Main {
 			}
 		});
 		
+		User user = null;
+		
 		JButton ginasio = new JButton(ginasioIcon);
 		ginasio.setBounds(200, 240, 47, 47);
 		ginasio.setBorder(null);
@@ -91,7 +93,7 @@ public class Main {
 		ginasio.setFocusable(false);
 		ginasio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawGinasioMenu();
+				drawGinasioMenu(user);
 			}
 		});
 		
@@ -204,7 +206,7 @@ public class Main {
 		entrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (emailTextField.getText().equals("")) {
-					showError("Insira nome");
+					showError("Insira email");
 					return;
 				}
 				if (passwordTextField.getPassword().length == 0) {
@@ -227,7 +229,7 @@ public class Main {
 					} else if (user instanceof VIP) {
 						//drawVipMenu(user);
 					} else {
-						//drawUserMenu(user);
+						drawGinasioMenu(user);
 					}
 				}
 			}
@@ -274,23 +276,156 @@ public class Main {
 			}
 		});
 		
-		JLabel contaTitle = new JLabel("Conta");
+		JLabel contaTitle = new JLabel("Criar conta");
 		contaTitle.setBounds(80, 25, 280, 47);
 		contaTitle.setForeground(Color.WHITE);
 		
+		JLabel gymIcon = new JLabel(weightIcon);
+		gymIcon.setBounds(160, 100, 47, 47);
+		
+		JLabel nomeLabel = new JLabel("Nome");
+		nomeLabel.setBounds(80, 160, 160, 47);
+		nomeLabel.setForeground(Color.WHITE);
+		
+		JTextField nomeTextField = new JTextField("");
+		nomeTextField.setBounds(70, 200, 220, 47);
+		nomeTextField.setBackground(Color.WHITE);
+		nomeTextField.setForeground(Color.BLACK);
+		nomeTextField.setColumns(30);
+		nomeTextField.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		JLabel emailLabel = new JLabel("Email");
+		emailLabel.setBounds(80, 240, 160, 47);
+		emailLabel.setForeground(Color.WHITE);
+		
+		JTextField emailTextField = new JTextField("");
+		emailTextField.setBounds(70, 280, 220, 47);
+		emailTextField.setBackground(Color.WHITE);
+		emailTextField.setForeground(Color.BLACK);
+		emailTextField.setColumns(30);
+		emailTextField.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		JLabel passwordLabel = new JLabel("Password");
+		passwordLabel.setBounds(80, 320, 160, 47);
+		passwordLabel.setForeground(Color.WHITE);
+		
+		JPasswordField passwordTextField = new JPasswordField("");
+		passwordTextField.setBounds(70, 360, 220, 47);
+		passwordTextField.setBackground(Color.WHITE);
+		passwordTextField.setForeground(Color.BLACK);
+		passwordTextField.setColumns(30);
+		passwordTextField.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		JButton showPasswordIcon = new JButton(showPasswordImage);
+		showPasswordIcon.setBounds(290, 370, 30, 30);
+		showPasswordIcon.setBorder(null);
+		showPasswordIcon.setOpaque(false);
+		showPasswordIcon.setContentAreaFilled(false);
+		showPasswordIcon.setBorderPainted(false);
+		showPasswordIcon.setFocusable(false);
+		showPasswordIcon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (passwordTextField.getEchoChar() == (char)0) {
+					passwordTextField.setEchoChar('\u2022');
+				} else if (passwordTextField.getEchoChar() == ('\u2022')) {
+					passwordTextField.setEchoChar((char)0);
+				}
+			}
+		});
+		
+		JLabel numeroLabel = new JLabel("Numero");
+		numeroLabel.setBounds(80, 400, 160, 47);
+		numeroLabel.setForeground(Color.WHITE);
+		
+		JTextField numeroTextField = new JTextField("");
+		numeroTextField.setBounds(70, 440, 220, 47);
+		numeroTextField.setBackground(Color.WHITE);
+		numeroTextField.setForeground(Color.BLACK);
+		numeroTextField.setColumns(30);
+		numeroTextField.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		JButton criar = new JButton("Criar");
+		criar.setBounds(200, 500, 110, 40);
+		criar.setBackground(Color.CYAN);
+		criar.setForeground(Color.BLACK);
+		criar.setFocusable(false);
+		criar.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		criar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (nomeTextField.getText().equals("")) {
+					showError("Insira nome");
+					return;
+				}
+				if (emailTextField.getText().equals("")) {
+					showError("Insira email");
+					return;
+				}
+				if (passwordTextField.getPassword().length == 0) {
+					showError("Insira password");
+					return;
+				}
+				if (numeroTextField.getText().equals("")) {
+					showError("Insira numero");
+					return;
+				}
+				if (!gereGinasio.criarConta(gereGinasio.users.size(), emailTextField.getText(),
+						passwordTextField.getPassword(), nomeTextField.getText(), numeroTextField.getText())) {
+					showError("Conta duplicada");
+					return;
+				}
+
+				User user = gereGinasio.entrarSistema(emailTextField.getText(), passwordTextField.getPassword());
+				
+				if  (user instanceof Colaborador) {
+					//drawColabMenu(user);
+				} else if (user instanceof VIP) {
+					//drawVipMenu(user);
+				} else {
+					drawGinasioMenu(user);
+				}
+			}
+		});
+		
 		try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
-            contaTitle.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+            emailLabel.setFont(font.deriveFont(Font.ITALIC, 24f));
+            nomeLabel.setFont(font.deriveFont(Font.ITALIC, 24f));
+            passwordLabel.setFont(font.deriveFont(Font.ITALIC, 24f));
+            numeroLabel.setFont(font.deriveFont(Font.ITALIC, 24f));
+            criar.setFont(font.deriveFont(Font.PLAIN, 14f));
+            contaTitle.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 48f));;
         } catch (FontFormatException | IOException ex) {
             ex.printStackTrace();
         }
 		
+		frame.add(emailLabel);
+		frame.add(emailTextField);
+		frame.add(nomeLabel);
+		frame.add(nomeTextField);
+		frame.add(passwordLabel);
+		frame.add(passwordTextField);
+		frame.add(numeroLabel);
+		frame.add(numeroTextField);
 		frame.add(contaTitle);
+		frame.add(criar);
+		frame.add(gymIcon);
+		frame.add(showPasswordIcon);
 		frame.add(back);
 		frame.repaint();
 	}
 	
-	public void drawGinasioMenu() {
+	public void drawGinasioMenu(User user) {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		
@@ -322,7 +457,7 @@ public class Main {
 		
 		horario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawHorarioMenu();
+				drawHorarioMenu(user);
 			}
 		});
 		
@@ -350,7 +485,7 @@ public class Main {
 		
 		contratos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawContratosMenu();
+				drawContratosMenu(user);
 			}
 		});
 		
@@ -367,34 +502,6 @@ public class Main {
 		JLabel contratosIcon = new JLabel(contratoIcon);
 		contratosIcon.setBounds(25, 230, 47, 53);
 		
-		JButton primeirosSocorros = new JButton("Suporte básico de vida");
-		primeirosSocorros.setBounds(100, 430, 240, 60);
-		primeirosSocorros.setBackground(Color.CYAN);
-		primeirosSocorros.setForeground(Color.BLACK);
-		primeirosSocorros.setFocusable(false);
-		primeirosSocorros.setBorder(BorderFactory.createCompoundBorder(
-                new CustomeBorder(), 
-                new EmptyBorder(new Insets(15, 25, 15, 25))));
-		
-		primeirosSocorros.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				drawHealthMenu();
-			}
-		});
-		
-		primeirosSocorros.addMouseListener(new java.awt.event.MouseAdapter() {
-		    public void mouseEntered(java.awt.event.MouseEvent evt) {
-		    	primeirosSocorros.setBackground(Color.WHITE);
-		    }
-
-		    public void mouseExited(java.awt.event.MouseEvent evt) {
-		    	primeirosSocorros.setBackground(Color.CYAN);
-		    }
-		});
-		
-		JLabel primeirosSocorrosIcon = new JLabel(healthIcon);
-		primeirosSocorrosIcon.setBounds(25, 430, 47, 53);
-
 		JButton personalTrainers = new JButton("Personal trainers");
 		personalTrainers.setBounds(100, 330, 240, 60);
 		personalTrainers.setBackground(Color.CYAN);
@@ -406,7 +513,7 @@ public class Main {
 		
 		personalTrainers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawTrainersMenu();
+				drawTrainersMenu(user);
 			}
 		});
 		
@@ -423,6 +530,94 @@ public class Main {
 		JLabel personalTrainersIcon = new JLabel(trainersIcon);
 		personalTrainersIcon.setBounds(25, 330, 47, 53);
 		
+		JButton primeirosSocorros = new JButton("Suporte básico de vida");
+		primeirosSocorros.setBounds(100, 430, 240, 60);
+		primeirosSocorros.setBackground(Color.CYAN);
+		primeirosSocorros.setForeground(Color.BLACK);
+		primeirosSocorros.setFocusable(false);
+		primeirosSocorros.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		primeirosSocorros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawHealthMenu(user);
+			}
+		});
+		
+		primeirosSocorros.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	primeirosSocorros.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	primeirosSocorros.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JLabel primeirosSocorrosIcon = new JLabel(healthIcon);
+		primeirosSocorrosIcon.setBounds(25, 430, 47, 53);
+		
+		JLabel welcome = new JLabel("");
+		welcome.setBounds(80, 120, 240, 47);
+		welcome.setForeground(Color.WHITE);
+		
+		JButton modifyAccount = new JButton("Editar conta");
+		modifyAccount.setBounds(100, 460, 240, 60);
+		modifyAccount.setBackground(Color.CYAN);
+		modifyAccount.setForeground(Color.BLACK);
+		modifyAccount.setFocusable(false);
+		modifyAccount.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		modifyAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawEditAccount(user);
+			}
+		});
+		
+		modifyAccount.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	modifyAccount.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	modifyAccount.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JLabel modifyAccountIcon = new JLabel(contaIcon);
+		modifyAccountIcon.setBounds(25, 460, 47, 53);
+		
+		JButton bookSession = new JButton("Marcar sessão");
+		bookSession.setBounds(100, 230, 240, 60);
+		bookSession.setBackground(Color.CYAN);
+		bookSession.setForeground(Color.BLACK);
+		bookSession.setFocusable(false);
+		bookSession.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		bookSession.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showError("marcar");
+			}
+		});
+		
+		bookSession.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	bookSession.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	bookSession.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JLabel bookSessionIcon = new JLabel(bicepIcon);
+		bookSessionIcon.setBounds(25, 230, 47, 53);
+		
 		try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
@@ -430,25 +625,60 @@ public class Main {
             contratos.setFont(font.deriveFont(Font.ITALIC, 22f));
             primeirosSocorros.setFont(font.deriveFont(Font.ITALIC, 18f));
             personalTrainers.setFont(font.deriveFont(Font.ITALIC, 22f));
+            modifyAccount.setFont(font.deriveFont(Font.ITALIC, 22f));
+            bookSession.setFont(font.deriveFont(Font.ITALIC, 22f));
+            welcome.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 24f));
             ginasioTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
         } catch (FontFormatException | IOException ex) {
             ex.printStackTrace();
         }
 		
-		frame.add(horario);
-		frame.add(contratos);
-		frame.add(primeirosSocorros);
-		frame.add(personalTrainers);
-		frame.add(horarioIcon);
-		frame.add(contratosIcon);
-		frame.add(primeirosSocorrosIcon);
-		frame.add(personalTrainersIcon);
-		frame.add(ginasioTitle);
-		frame.add(back);
-		frame.repaint();
+		if (user instanceof User) {
+			horario.setBounds(100, 260, 240, 60);
+			horarioIcon.setBounds(30, 270, 47, 47);
+			
+			primeirosSocorros.setBounds(100, 360, 240, 60);
+			primeirosSocorrosIcon.setBounds(25, 360, 47, 53);
+			
+			welcome.setText("Bem-Vindo " + user.getNome());
+			
+			frame.add(horario);
+			frame.add(horarioIcon);
+			frame.add(modifyAccount);
+			frame.add(modifyAccountIcon);
+			frame.add(primeirosSocorros);
+			frame.add(primeirosSocorrosIcon);
+			frame.add(ginasioTitle);
+			frame.add(welcome);
+			frame.add(back);
+			
+			frame.repaint();
+		} else if (user instanceof VIP) {
+			
+			frame.add(bookSession);
+			frame.add(bookSessionIcon);
+			
+			frame.repaint();
+		} else if (user instanceof Colaborador) {
+			
+			
+			frame.repaint();
+		} else {
+			frame.add(horario);
+			frame.add(horarioIcon);
+			frame.add(primeirosSocorros);
+			frame.add(primeirosSocorrosIcon);
+			frame.add(personalTrainers);
+			frame.add(personalTrainersIcon);
+			frame.add(contratos);
+			frame.add(contratosIcon);
+			frame.add(ginasioTitle);
+			frame.add(back);
+			frame.repaint();
+		}
 	}
 	
-	public void drawHorarioMenu() {
+	public void drawEditAccount(User user) {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		
@@ -461,7 +691,126 @@ public class Main {
 		back.setFocusable(false);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawGinasioMenu();
+				drawGinasioMenu(user);
+			}
+		});
+		
+		JLabel editContaTitle = new JLabel("Editar");
+		editContaTitle.setBounds(80, 25, 280, 47);
+		editContaTitle.setForeground(Color.WHITE);
+		
+		JLabel personalInfo = new JLabel("Informações Pessoais");
+		personalInfo.setBounds(60, 80, 280, 47);
+		personalInfo.setForeground(Color.WHITE);
+		
+		JLabel text1 = new JLabel("Nome");
+		text1.setBounds(40, 120, 100, 40);
+		text1.setForeground (Color.CYAN);
+		
+		JLabel text2 = new JLabel(user.getNome());
+		text2.setBounds(40, 140, 200, 40);
+		text2.setForeground (Color.WHITE);
+		
+		JLabel text3 = new JLabel("Email");
+		text3.setBounds(40, 180, 100, 40);
+		text3.setForeground (Color.CYAN);
+		
+		JLabel text4 = new JLabel(user.getEmail());
+		text4.setBounds(40, 200, 200, 40);
+		text4.setForeground (Color.WHITE);
+		
+		JLabel text5 = new JLabel("Numero");
+		text5.setBounds(40, 240, 100, 40);
+		text5.setForeground (Color.CYAN);
+		
+		JLabel text6 = new JLabel(user.getNumero());
+		text6.setBounds(40, 260, 200, 40);
+		text6.setForeground (Color.WHITE);
+		
+		JLabel text7 = new JLabel("Password");
+		text7.setBounds(40, 300, 120, 40);
+		text7.setForeground (Color.CYAN);
+		
+		JLabel text8 = new JLabel(user.getPassword());
+		text8.setBounds(40, 320, 200, 40);
+		text8.setForeground (Color.WHITE);
+		
+		JLabel contractInfo = new JLabel("Contrato");
+		contractInfo.setBounds(130, 360, 280, 47);
+		contractInfo.setForeground(Color.WHITE);
+		
+		JLabel text9 = new JLabel("Tipo");
+		text9.setBounds(40, 400, 120, 40);
+		text9.setForeground (Color.CYAN);
+		
+		JLabel text10 = new JLabel("");
+		text10.setBounds(80, 380, 200, 40);
+		text10.setForeground (Color.WHITE);
+		
+		if (user.getContrato().getContratoType().equals(ContratoType.DIARIO)) {
+			text10.setText("Diário");
+		} else if (user.getContrato().getContratoType().equals(ContratoType.TRIMESTRAL)) {
+			text10.setText("Trimestral");
+		} else if (user.getContrato().getContratoType().equals(ContratoType.SEMESTRAL)) {
+			text10.setText("Semestral");
+		} else if (user.getContrato().getContratoType().equals(ContratoType.ANUAL)) {
+			text10.setText("Anual");
+		} else if (user.getContrato().getContratoType().equals(ContratoType.NULL)) {
+			contractInfo.setVisible(false);
+			text9.setVisible(false);
+			text10.setVisible(false);
+		}
+		
+		try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            text1.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text2.setFont(font.deriveFont(Font.PLAIN, 18f));
+            text3.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text4.setFont(font.deriveFont(Font.PLAIN, 18f));
+            text5.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text6.setFont(font.deriveFont(Font.PLAIN, 18f));
+            text7.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text8.setFont(font.deriveFont(Font.PLAIN, 18f));
+            text9.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text10.setFont(font.deriveFont(Font.PLAIN, 18f));
+            personalInfo.setFont(font.deriveFont(Font.BOLD, 24f));
+            contractInfo.setFont(font.deriveFont(Font.BOLD, 24f));
+            editContaTitle.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(text1);
+		frame.add(text2);
+		frame.add(text3);
+		frame.add(text4);
+		frame.add(text5);
+		frame.add(text6);
+		frame.add(text7);
+		frame.add(text8);
+		frame.add(text9);
+		frame.add(text10);
+		frame.add(personalInfo);
+		frame.add(contractInfo);
+		frame.add(editContaTitle);
+		frame.add(back);
+		frame.repaint();
+	}
+	
+	public void drawHorarioMenu(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawGinasioMenu(user);
 			}
 		});
 		
@@ -517,8 +866,8 @@ public class Main {
 		frame.add(back);
 		frame.repaint();
 	}
-
-	public void drawContratosMenu() {
+	
+	public void drawContratosMenu(User user) {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		
@@ -531,19 +880,18 @@ public class Main {
 		back.setFocusable(false);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawGinasioMenu();
+				drawGinasioMenu(user);
 			}
 		});
+		
+		JLabel contratos = new JLabel(contratoIcon);
+		contratos.setBounds(150, 120, 47, 47);
 		
 		JLabel contratosTitle = new JLabel("Contratos");
 		contratosTitle.setBounds(80, 25, 280, 47);
 		contratosTitle.setForeground(Color.WHITE);
 		
-		JLabel contratosSubTitle = new JLabel("Tipos de acesso");
-		contratosSubTitle.setBounds(60, 120, 240, 47);
-		contratosSubTitle.setForeground(Color.WHITE);
-		
-		JButton button1 = new JButton("Acesso básico");
+		JButton button1 = new JButton("Tipos de acesso");
 		button1.setBounds(60, 190, 240, 60);
 		button1.setBackground(Color.CYAN);
 		button1.setForeground(Color.BLACK);
@@ -554,9 +902,119 @@ public class Main {
 		
 		button1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawContratosMenu();
+				drawAcessType(user);
 			}
 		});
+		button1.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button1.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button1.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JButton button2 = new JButton("Durações");
+		button2.setBounds(60, 270, 240, 60);
+		button2.setBackground(Color.CYAN);
+		button2.setForeground(Color.BLACK);
+		button2.setFocusable(false);
+		button2.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		button2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawDuration(user);
+			}
+		});
+		button2.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button2.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button2.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JButton button3 = new JButton("Tipos de cliente");
+		button3.setBounds(60, 350, 240, 60);
+		button3.setBackground(Color.CYAN);
+		button3.setForeground(Color.BLACK);
+		button3.setFocusable(false);
+		button3.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		button3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawClientType(user);
+			}
+		});
+		button3.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button3.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button3.setBackground(Color.CYAN);
+		    }
+		});
+		
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            button1.setFont(font.deriveFont(Font.ITALIC, 24f));
+            button2.setFont(font.deriveFont(Font.ITALIC, 24f));
+            button3.setFont(font.deriveFont(Font.ITALIC, 24f));
+            contratosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(button1);
+		frame.add(button2);
+		frame.add(button3);
+		frame.add(contratos);
+		frame.add(contratosTitle);
+		frame.add(back);
+		frame.repaint();
+	}
+
+	public void drawAcessType(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawContratosMenu(user);
+			}
+		});
+		
+		JLabel contratos = new JLabel(contratoIcon);
+		contratos.setBounds(150, 120, 47, 47);
+		
+		JLabel contratosTitle = new JLabel("Tipos de acesso");
+		contratosTitle.setBounds(80, 25, 280, 47);
+		contratosTitle.setForeground(Color.WHITE);
+		
+		JButton button1 = new JButton("Acesso básico");
+		button1.setBounds(60, 190, 240, 60);
+		button1.setBackground(Color.CYAN);
+		button1.setForeground(Color.BLACK);
+		button1.setFocusable(false);
+		button1.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
 		button1.addMouseListener(new java.awt.event.MouseAdapter() {
 		    public void mouseEntered(java.awt.event.MouseEvent evt) {
 		    	button1.setBackground(Color.WHITE);
@@ -596,12 +1054,6 @@ public class Main {
 		button2.setBorder(BorderFactory.createCompoundBorder(
                 new CustomeBorder(), 
                 new EmptyBorder(new Insets(15, 25, 15, 25))));
-		
-		button2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				drawContratosMenu();
-			}
-		});
 		button2.addMouseListener(new java.awt.event.MouseAdapter() {
 		    public void mouseEntered(java.awt.event.MouseEvent evt) {
 		    	button2.setBackground(Color.WHITE);
@@ -634,53 +1086,6 @@ public class Main {
 		    }
 		});
 		
-		AtomicInteger count = new AtomicInteger(1);
-		
-		JLabel page = new JLabel("Pagina " + count.get() + "/3");
-		page.setBounds(130, 500, 100, 47);
-		page.setForeground(Color.WHITE);
-		
-		JButton goBack = new JButton("<<");
-		goBack.setBounds(95, 515, 20, 20);
-		goBack.setBorder(null);
-		goBack.setOpaque(false);
-		goBack.setContentAreaFilled(false);
-		goBack.setBorderPainted(false);
-		goBack.setFocusable(false);
-		goBack.setForeground(Color.WHITE);
-		goBack.setVisible(false);
-		
-		JButton goForward = new JButton(">>");
-		goForward.setBounds(240, 515, 20, 20);
-		goForward.setBorder(null);
-		goForward.setOpaque(false);
-		goForward.setContentAreaFilled(false);
-		goForward.setBorderPainted(false);
-		goForward.setFocusable(false);
-		goForward.setForeground(Color.WHITE);
-		
-		goForward.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				count.incrementAndGet();
-				goBack.setVisible(true);
-				if (count.get() >= 3) {
-					goForward.setVisible(false);
-				}
-				page.setText("Pagina " + count.get() + "/3");
-			}
-		});
-		
-		goBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				count.decrementAndGet();
-				goForward.setVisible(true);
-				if (count.get() <= 1) {
-					goBack.setVisible(false);
-				}
-				page.setText("Pagina " + count.get() + "/3");
-			}
-		});
-		
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
@@ -688,9 +1093,7 @@ public class Main {
             button2.setFont(font.deriveFont(Font.ITALIC, 24f));
             moreInfo.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
             moreInfo2.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
-            page.setFont(font.deriveFont(Font.PLAIN, 20f));
-            contratosSubTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 32f));
-            contratosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+            contratosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 36f));
         } catch (FontFormatException | IOException ex) {
             ex.printStackTrace();
         }
@@ -699,18 +1102,15 @@ public class Main {
 		frame.add(button2);
 		frame.add(moreInfo);
 		frame.add(moreInfo2);
-		frame.add(contratosSubTitle);
+		frame.add(contratos);
 		frame.add(contratosTitle);
 		frame.add(info);
 		frame.add(info2);
-		frame.add(page);
-		frame.add(goForward);
-		frame.add(goBack);
 		frame.add(back);
 		frame.repaint();
 	}
 	
-	public void drawHealthMenu() {
+	public void drawDuration(User user) {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		
@@ -723,15 +1123,136 @@ public class Main {
 		back.setFocusable(false);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawGinasioMenu();
+				drawContratosMenu(user);
 			}
 		});
 		
+		JLabel contratos = new JLabel(contratoIcon);
+		contratos.setBounds(150, 120, 47, 47);
+		
+		JLabel contratosTitle = new JLabel("Durações");
+		contratosTitle.setBounds(80, 25, 280, 47);
+		contratosTitle.setForeground(Color.WHITE);
+		
+		JButton button1 = new JButton("Diário");
+		button1.setBounds(60, 190, 240, 60);
+		button1.setBackground(Color.CYAN);
+		button1.setForeground(Color.BLACK);
+		button1.setFocusable(false);
+		button1.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		button1.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button1.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button1.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JLabel moreInfo = new JLabel("");
+		moreInfo.setBounds(110, 260, 280, 47);
+		moreInfo.setForeground(Color.WHITE);
+		
+		JButton info = new JButton(infoIcon);
+		info.setBounds(70, 260, 30, 30);
+		info.setBorder(null);
+		info.setOpaque(false);
+		info.setContentAreaFilled(false);
+		info.setBorderPainted(false);
+		info.setFocusable(false);
+		info.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	moreInfo.setText( String.format( "<html> onde o cliente pode cessar contrato <br> sempre que assim entender </html>"));
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	moreInfo.setText("");
+		    }
+		});
+		
+		JButton button2 = new JButton("Trimestral");
+		button2.setBounds(60, 310, 240, 60);
+		button2.setBackground(Color.CYAN);
+		button2.setForeground(Color.BLACK);
+		button2.setFocusable(false);
+		button2.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		button2.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button2.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button2.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JButton button3 = new JButton("Semestral");
+		button3.setBounds(60, 380, 240, 60);
+		button3.setBackground(Color.CYAN);
+		button3.setForeground(Color.BLACK);
+		button3.setFocusable(false);
+		button3.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		button3.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button3.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button3.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JButton button4 = new JButton("Anual");
+		button4.setBounds(60, 450, 240, 60);
+		button4.setBackground(Color.CYAN);
+		button4.setForeground(Color.BLACK);
+		button4.setFocusable(false);
+		button4.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		button4.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button4.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button4.setBackground(Color.CYAN);
+		    }
+		});
+		
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            button1.setFont(font.deriveFont(Font.ITALIC, 24f));
+            button2.setFont(font.deriveFont(Font.ITALIC, 24f));
+            button3.setFont(font.deriveFont(Font.ITALIC, 24f));
+            button4.setFont(font.deriveFont(Font.ITALIC, 24f));
+            moreInfo.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
+            contratosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 36f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(button1);
+		frame.add(button2);
+		frame.add(button3);
+		frame.add(button4);
+		frame.add(moreInfo);
+		frame.add(contratos);
+		frame.add(contratosTitle);
+		frame.add(info);
 		frame.add(back);
 		frame.repaint();
 	}
 	
-	public void drawTrainersMenu() {
+	public void drawClientType(User user) {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		
@@ -744,7 +1265,147 @@ public class Main {
 		back.setFocusable(false);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				drawGinasioMenu();
+				drawContratosMenu(user);
+			}
+		});
+		
+		JLabel contratos = new JLabel(contratoIcon);
+		contratos.setBounds(150, 120, 47, 47);
+		
+		JLabel contratosTitle = new JLabel("Tipos de cliente");
+		contratosTitle.setBounds(80, 25, 280, 47);
+		contratosTitle.setForeground(Color.WHITE);
+		
+		JButton button1 = new JButton("Cliente normal");
+		button1.setBounds(60, 220, 240, 60);
+		button1.setBackground(Color.CYAN);
+		button1.setForeground(Color.BLACK);
+		button1.setFocusable(false);
+		button1.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		button1.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button1.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button1.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JButton button2 = new JButton("Cliente VIP");
+		button2.setBounds(60, 340, 240, 60);
+		button2.setBackground(Color.CYAN);
+		button2.setForeground(Color.BLACK);
+		button2.setFocusable(false);
+		button2.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		button2.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	button2.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	button2.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JLabel moreInfo = new JLabel("");
+		moreInfo.setBounds(110, 410, 280, 77);
+		moreInfo.setForeground(Color.WHITE);
+		
+		JButton info = new JButton(infoIcon);
+		info.setBounds(70, 410, 30, 30);
+		info.setBorder(null);
+		info.setOpaque(false);
+		info.setContentAreaFilled(false);
+		info.setBorderPainted(false);
+		info.setFocusable(false);
+		info.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	moreInfo.setText( String.format( "<html> que para além das condições<br> associadas ao cliente normal, <br>tem acesso aos serviços <br>de personal trainer </html>"));
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	moreInfo.setText("");
+		    }
+		});
+		
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            button1.setFont(font.deriveFont(Font.ITALIC, 24f));
+            button2.setFont(font.deriveFont(Font.ITALIC, 24f));
+            moreInfo.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
+            contratosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 36f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(button1);
+		frame.add(button2);
+		frame.add(moreInfo);
+		frame.add(contratos);
+		frame.add(contratosTitle);
+		frame.add(info);
+		frame.add(back);
+		frame.repaint();
+	}
+	
+	public void drawHealthMenu(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawGinasioMenu(user);
+			}
+		});
+		
+		JLabel primeirosIcon = new JLabel(healthIcon);
+		primeirosIcon.setBounds(150, 120, 47, 47);
+		
+		JLabel primeirosTitle = new JLabel("Suporte basico de vida");
+		primeirosTitle.setBounds(80, 25, 280, 47);
+		primeirosTitle.setForeground(Color.WHITE);
+		
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            primeirosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(primeirosIcon);
+		frame.add(primeirosTitle);
+		frame.add(back);
+		frame.repaint();
+	}
+	
+	public void drawTrainersMenu(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawGinasioMenu(user);
 			}
 		});
 		
