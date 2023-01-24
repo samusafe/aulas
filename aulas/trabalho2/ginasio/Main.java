@@ -63,7 +63,9 @@ public class Main {
 	private ImageIcon trainersIcon = new ImageIcon(getClass().getResource("/img/trainers.png"));
 	private ImageIcon weightIcon = new ImageIcon(getClass().getResource("/img/weight.png"));
 	private ImageIcon plusIcon = new ImageIcon(getClass().getResource("/img/plus.png"));
+	private ImageIcon minusIcon = new ImageIcon(getClass().getResource("/img/minus.png"));
 	private ImageIcon searchIcon = new ImageIcon(getClass().getResource("/img/search.png"));
+	private ImageIcon statsIcon = new ImageIcon(getClass().getResource("/img/stats.png"));
 	private ImageIcon ginasioIcon = new ImageIcon(getClass().getResource("/img/ginasio.png"));
 	private ImageIcon infoIcon = new ImageIcon(getClass().getResource("/img/info.png"));
 	private GereGinasio gereGinasio = new GereGinasio();
@@ -576,7 +578,7 @@ public class Main {
 		welcome.setBounds(80, 120, 240, 47);
 		welcome.setForeground(Color.WHITE);
 		
-		JButton modifyAccount = new JButton("Editar conta");
+		JButton modifyAccount = new JButton("Conta");
 		modifyAccount.setBounds(100, 460, 240, 60);
 		modifyAccount.setBackground(Color.CYAN);
 		modifyAccount.setForeground(Color.BLACK);
@@ -604,7 +606,7 @@ public class Main {
 		JLabel modifyAccountIcon = new JLabel(contaIcon);
 		modifyAccountIcon.setBounds(25, 460, 47, 53);
 		
-		JButton bookSession = new JButton("Marcar sessão");
+		JButton bookSession = new JButton("Sessão de treino");
 		bookSession.setBounds(100, 230, 240, 60);
 		bookSession.setBackground(Color.CYAN);
 		bookSession.setForeground(Color.BLACK);
@@ -753,7 +755,7 @@ public class Main {
 			
 			bookSession.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					showError("marcar");
+					drawBookSession(user);
 				}
 			});
 			
@@ -784,7 +786,7 @@ public class Main {
 			bookSession.setText("Gerir sessões");
 			bookSession.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					showError("gerir sessoes");
+					drawBookSession(user);
 				}
 			});
 			
@@ -794,10 +796,25 @@ public class Main {
 				}
 			});
 			
+			JButton stats = new JButton(statsIcon);
+			stats.setBounds(260, 160, 57, 57);
+			stats.setBorder(null);
+			stats.setOpaque(false);
+			stats.setContentAreaFilled(false);
+			stats.setBorderPainted(false);
+			stats.setFocusable(false);
+			stats.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					drawStats(user);
+				}
+			});
+			
 			frame.add(bookSession);
 			frame.add(bookSessionIcon);
 			frame.add(manageClients);
 			frame.add(manageClientsIcon);
+			
+			frame.add(stats);
 			
 			frame.add(modifyAccount);
 			frame.add(modifyAccountIcon);
@@ -811,6 +828,240 @@ public class Main {
 		}
 	}
 	
+	public void drawStats(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawGinasioMenu(user);
+			}
+		});
+		
+		JLabel statsTitle = new JLabel("Estatistica");
+		statsTitle.setBounds(80, 25, 280, 47);
+		statsTitle.setForeground(Color.WHITE);
+		
+		JLabel totalClients = new JLabel("Numero total de clientes - " + gereGinasio.filterUsers().size());
+		totalClients.setBounds(50, 100, 300, 47);
+		totalClients.setForeground(Color.WHITE);
+		
+		JLabel totalColabs = new JLabel("Numero total de colaboradores - " + gereGinasio.filterColab().size());
+		totalColabs.setBounds(50, 120, 300, 47);
+		totalColabs.setForeground(Color.WHITE);
+		
+		JLabel activeClients = new JLabel("Numero total de clientes ativos - " + gereGinasio.countContracts());
+		activeClients.setBounds(50, 140, 300, 47);
+		activeClients.setForeground(Color.WHITE);
+		
+		try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            totalClients.setFont(font.deriveFont(Font.PLAIN, 16f));
+            totalColabs.setFont(font.deriveFont(Font.PLAIN, 16f));
+            activeClients.setFont(font.deriveFont(Font.PLAIN, 16f));
+            statsTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(statsTitle);
+		frame.add(totalClients);
+		frame.add(totalColabs);
+		frame.add(activeClients);
+		frame.add(back);
+		frame.repaint();
+	}
+	
+	public void drawBookSession(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawGinasioMenu(user);
+			}
+		});
+		
+		JLabel ginasioTitle = new JLabel("Sessão");
+		ginasioTitle.setBounds(80, 25, 280, 47);
+		ginasioTitle.setForeground(Color.WHITE);
+		
+		if (user instanceof Colaborador) {	
+			frame.getContentPane().removeAll();
+			frame.getContentPane().setBackground(Color.DARK_GRAY);
+			
+			DefaultListModel<Sessao> model = new DefaultListModel<>();
+			model.addAll(((Colaborador) user).getSessoes());
+			
+			JList<Sessao> listUser = new JList<>(model);
+			listUser.setLayoutOrientation(JList.VERTICAL);
+			
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setBounds(55, 120, 250, 200);
+			scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+			scrollPane.setBorder(new TitledBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED),"Data     |   Cliente"));
+			scrollPane.setViewportView(listUser);
+			
+			frame.add(ginasioTitle);
+			frame.add(scrollPane);
+			frame.add(back);
+			frame.setVisible(true);
+			frame.repaint();
+		}
+		if (user instanceof VIP) {
+			frame.getContentPane().removeAll();
+			frame.getContentPane().setBackground(Color.DARK_GRAY);
+			
+			DefaultListModel<Sessao> model = new DefaultListModel<>();
+			model.addAll(((VIP) user).getSessoes());
+			
+			JList<Sessao> listUser = new JList<>(model);
+			listUser.setLayoutOrientation(JList.VERTICAL);
+			
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setBounds(55, 120, 250, 200);
+			scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+			scrollPane.setBorder(new TitledBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED),"Data     |   Personal Trainer"));
+			scrollPane.setViewportView(listUser);
+			
+			JButton newSession = new JButton(plusIcon);
+			newSession.setBounds(260, 470, 57, 57);
+			newSession.setBorder(null);
+			newSession.setOpaque(false);
+			newSession.setContentAreaFilled(false);
+			newSession.setBorderPainted(false);
+			newSession.setFocusable(false);
+			newSession.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					drawNewSession(user);
+				}
+			});
+			
+			JButton unBookSession = new JButton(minusIcon);
+			unBookSession.setBounds(200, 470, 57, 57);
+			unBookSession.setBorder(null);
+			unBookSession.setOpaque(false);
+			unBookSession.setContentAreaFilled(false);
+			unBookSession.setBorderPainted(false);
+			unBookSession.setFocusable(false);
+			unBookSession.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (listUser.getSelectedIndex() == -1) {
+						showError("Seleciona uma sessao");
+						return;
+					} else {
+						gereGinasio.unBookSession(model.get(listUser.getSelectedIndex()), user, model.get(listUser.getSelectedIndex()).getTrainer());
+						drawBookSession(user);
+					}
+				}
+			});
+			
+			frame.add(ginasioTitle);
+			frame.add(newSession);
+			frame.add(unBookSession);
+			frame.add(scrollPane);
+			frame.add(back);
+			frame.setVisible(true);
+			frame.repaint();
+		}	
+		try {
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            ginasioTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+	}
+	
+	public void drawNewSession(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawBookSession(user);
+			}
+		});
+		
+		JLabel ginasioTitle = new JLabel("Sessão");
+		ginasioTitle.setBounds(80, 25, 280, 47);
+		ginasioTitle.setForeground(Color.WHITE);
+		
+		DefaultListModel<User> model = new DefaultListModel<>();
+		model.addAll(gereGinasio.filterColab());
+		
+		JList<User> listUser = new JList<>(model);
+		listUser.setLayoutOrientation(JList.VERTICAL);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(55, 100, 250, 200);
+		scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+		scrollPane.setBorder(new TitledBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED),"Personal Trainers"));
+		scrollPane.setViewportView(listUser);
+		
+		DateTextField dateTextField = new DateTextField();
+		dateTextField.setBounds(70, 320, 80, 30);
+		
+		JButton addSession = new JButton(plusIcon);
+		addSession.setBounds(260, 470, 57, 57);
+		addSession.setBorder(null);
+		addSession.setOpaque(false);
+		addSession.setContentAreaFilled(false);
+		addSession.setBorderPainted(false);
+		addSession.setFocusable(false);
+		addSession.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String data = dateTextField.getText();
+				if (listUser.getSelectedIndex() == -1) {
+					showError("Seleciona uma colaborador");
+					return;
+				} 
+				if (!gereGinasio.bookSession(user, data, model.get(listUser.getSelectedIndex()))) {
+					showError("Nao foi possivel");
+					return;
+				}
+				
+				drawBookSession(user);
+			}
+		});
+        
+		try {
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            ginasioTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+	 
+		frame.add(addSession);
+		frame.add(dateTextField);
+		frame.add(ginasioTitle);
+		frame.add(scrollPane);
+		frame.add(back);
+		frame.setVisible(true);
+		frame.repaint();
+	}
+        
 	public void drawManageClients(User user) {
 		frame.getContentPane().removeAll();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -1126,9 +1377,10 @@ public class Main {
 			
 			if (entrada2 == "Normal") {
 				client.getContrato().setClientType(ClientType.NORMAL);
+				gereGinasio.convertNormal(client);
 			} else if (entrada2 == "VIP") {
-				gereGinasio.convertVIP(client);
 				client.getContrato().setClientType(ClientType.VIP);
+				gereGinasio.convertVIP(client);
 			}
 			
 			String entrada3 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de contrato", "Acesso", JOptionPane.YES_NO_OPTION, null, contra, null);
@@ -1186,9 +1438,10 @@ public class Main {
 				
 				if (entrada2 == "Normal") {
 					client.getContrato().setClientType(ClientType.NORMAL);
+					gereGinasio.convertNormal(client);
 				} else if (entrada2 == "VIP") {
-					gereGinasio.convertVIP(client);
 					client.getContrato().setClientType(ClientType.VIP);
+					gereGinasio.convertVIP(client);
 				}
 			} else if (option == 2) {
 				String[] contra = { "Diario", "Trimestral", "Semestral", "Anual" };
@@ -1246,7 +1499,7 @@ public class Main {
 			}
 		});
 		
-		JLabel editContaTitle = new JLabel("Editar");
+		JLabel editContaTitle = new JLabel("Conta");
 		editContaTitle.setBounds(80, 25, 280, 47);
 		editContaTitle.setForeground(Color.WHITE);
 		
@@ -1295,8 +1548,24 @@ public class Main {
 		text9.setForeground (Color.CYAN);
 		
 		JLabel text10 = new JLabel("");
-		text10.setBounds(80, 380, 200, 40);
+		text10.setBounds(100, 400, 200, 40);
 		text10.setForeground (Color.WHITE);
+		
+		JLabel text11 = new JLabel("Conta");
+		text11.setBounds(40, 430, 120, 40);
+		text11.setForeground (Color.CYAN);
+		
+		JLabel text12 = new JLabel("");
+		text12.setBounds(120, 430, 200, 40);
+		text12.setForeground (Color.WHITE);
+		
+		JLabel text13 = new JLabel("Acesso");
+		text13.setBounds(40, 460, 120, 40);
+		text13.setForeground (Color.CYAN);
+		
+		JLabel text14 = new JLabel("");
+		text14.setBounds(140, 460, 200, 40);
+		text14.setForeground (Color.WHITE);
 		
 		if (user.getContrato().getContratoType().equals(ContratoType.DIARIO)) {
 			text10.setText("Diário");
@@ -1312,6 +1581,26 @@ public class Main {
 			text10.setVisible(false);
 		}
 		
+		if (user.getContrato().getClientType().equals(ClientType.NORMAL)) {
+			text12.setText("Normal");
+		} else if (user.getContrato().getClientType().equals(ClientType.VIP)) {
+			text12.setText("VIP");
+		} else if (user.getContrato().getClientType().equals(ClientType.NULL)) {
+			contractInfo.setVisible(false);
+			text11.setVisible(false);
+			text12.setVisible(false);
+		}
+		
+		if (user.getContrato().getAcessType().equals(AcessType.BASICO)) {
+			text14.setText("Basico");
+		} else if (user.getContrato().getAcessType().equals(AcessType.COMPLETO)) {
+			text14.setText("Completo");
+		} else if (user.getContrato().getAcessType().equals(AcessType.NULL)) {
+			contractInfo.setVisible(false);
+			text13.setVisible(false);
+			text14.setVisible(false);
+		}
+		
 		try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
             text1.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
@@ -1324,6 +1613,10 @@ public class Main {
             text8.setFont(font.deriveFont(Font.PLAIN, 18f));
             text9.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
             text10.setFont(font.deriveFont(Font.PLAIN, 18f));
+            text11.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text12.setFont(font.deriveFont(Font.PLAIN, 18f));
+            text13.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            text14.setFont(font.deriveFont(Font.PLAIN, 18f));
             personalInfo.setFont(font.deriveFont(Font.BOLD, 24f));
             contractInfo.setFont(font.deriveFont(Font.BOLD, 24f));
             editContaTitle.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 48f));
@@ -1341,6 +1634,10 @@ public class Main {
 		frame.add(text8);
 		frame.add(text9);
 		frame.add(text10);
+		frame.add(text11);
+		frame.add(text12);
+		frame.add(text13);
+		frame.add(text14);
 		frame.add(personalInfo);
 		frame.add(contractInfo);
 		frame.add(editContaTitle);
@@ -1929,13 +2226,25 @@ public class Main {
 		primeirosTitle.setBounds(80, 25, 280, 47);
 		primeirosTitle.setForeground(Color.WHITE);
 		
+		JLabel text = new JLabel("<html>Suporte básico de vida (SBV) é o conjunto de medidas "
+				+ "e procedimentos técnicos que objetivam o suporte de vida à vítima."
+				+ "O SBV é vital até a chegada do SIV (Suporte intermediário de vida"
+				+ "transporte até o hospital). O objetivo principal é não agravar"
+				+ "lesões já existentes ou gerar novas lesões (iatrogenias)."
+				+ " Um rápido SBV proporciona até 60% de chance de sobrevivência.</html>");
+		text.setBounds(40, 200, 300, 300);
+		text.setForeground (Color.WHITE);
+		
 		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            text.setFont(font.deriveFont(Font.BOLD | Font.ITALIC, 14f));
             primeirosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 24f));
         } catch (FontFormatException | IOException ex) {
             ex.printStackTrace();
         }
 		
+		frame.add(text);
 		frame.add(primeirosIcon);
 		frame.add(primeirosTitle);
 		frame.add(back);
@@ -1959,7 +2268,37 @@ public class Main {
 			}
 		});
 		
+		JLabel trainersTitle = new JLabel("Personal trainers");
+		trainersTitle.setBounds(80, 25, 280, 47);
+		trainersTitle.setForeground(Color.WHITE);
+		
+		JLabel weight = new JLabel(weightIcon);
+		weight.setBounds(150, 100, 47, 47);
+		
+		DefaultListModel<User> model = new DefaultListModel<>();
+		model.addAll(gereGinasio.filterColab());
+		
+		JList<User> listUser = new JList<>(model);
+		listUser.setLayoutOrientation(JList.VERTICAL);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(55, 160, 250, 200);
+		scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+		scrollPane.setBorder(new TitledBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED),"Personal Trainers"));
+		scrollPane.setViewportView(listUser);
+		
+		try {
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            trainersTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 32f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+		frame.add(trainersTitle);
+		frame.add(weight);
+		frame.add(scrollPane);
 		frame.add(back);
+		frame.setVisible(true);
 		frame.repaint();
 	}
 	  

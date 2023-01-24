@@ -4,13 +4,11 @@ public class Sessao {
 	
 	private User user;
 	private String data;
-	private String hora;
 	private User trainer;
 	
-	public Sessao(User user, String data, String hora, User trainer) {
+	public Sessao(User user, String data, User trainer) {
 		this.user = user;
 		this.data = data;
-		this.hora = hora;
 		this.trainer = trainer;
 	}
 	
@@ -30,19 +28,21 @@ public class Sessao {
 		this.data = data;
 	}
 
-	public String getHora() {
-		return hora;
-	}
-
-	public void setHora(String hora) {
-		this.hora = hora;
-	}
-
 	public User getTrainer() {
 		return trainer;
 	}
 
 	public void setTrainer(User trainer) {
 		this.trainer = trainer;
-	}	
+	}
+	
+	public String toString() {
+		if (user instanceof VIP) {
+			return data + "      " + trainer.getNome();
+		} 
+		if (user instanceof Colaborador) {
+			return data + "      " + user.getNome();
+		}
+		return null;
+	}
 }

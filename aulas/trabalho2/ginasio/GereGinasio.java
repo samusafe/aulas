@@ -2,14 +2,21 @@ package ginasio;
 
 import java.util.ArrayList;
 
+import enums.AcessType;
+import enums.ClientType;
 import enums.ContratoType;
 
 interface Methods {
 	public boolean criarConta(int id, String nome, String email, char[] password, String numero);
 	public User entrarSistema(String nome, char[] password);
 	public User getClientByNumber(String number);
-	public boolean bookSession(User user, String data, String hora, User trainer);
+	public boolean bookSession(User user, String data, User trainer);
+	public void unBookSession(Sessao sessao, User user, User trainer);
 	public void convertVIP(User user);
+	public void convertNormal(User user);
+	public ArrayList<User> filterUsers();
+	public ArrayList<User> filterColab();
+	public int countContracts();
 }
 
 class GereGinasio implements Methods {
@@ -26,8 +33,15 @@ class GereGinasio implements Methods {
 		User user6 = new User(6, "guilherme", "guilherme", "guilherme", "guilherme");
 		User user7 = new User(7, "jose", "jose", "jose", "jose");
 		User user8 = new User(8, "antonio", "antonio", "antonio", "antonio");
+		User user9 = new User(9, "duarte", "duarte", "duarte", "duarte");
+		User user10 = new User(10, "david", "david", "david", "david");
 		VIP user15 = new VIP(15, "vip", "vip", "vip", "vip");
-		Colaborador user16 = new Colaborador(16, "colab", "colab", "colab", "colab", true, true);
+		((VIP) user15).getContrato().setAcessType(AcessType.COMPLETO);
+		((VIP) user15).getContrato().setClientType(ClientType.VIP);
+		((VIP) user15).getContrato().setContratoType(ContratoType.ANUAL);
+		((VIP) user15).getContrato().setDataInicio("24/01/2023");
+		((VIP) user15).getContrato().setDataFinal("24/01/2024");
+		Colaborador user16 = new Colaborador(16, "colab", "colab", "colab", "colab");
 		users.add(user1);
 		users.add(user2);
 		users.add(user3);
@@ -36,6 +50,8 @@ class GereGinasio implements Methods {
 		users.add(user6);
 		users.add(user7);
 		users.add(user8);
+		users.add(user9);
+		users.add(user10);
 		users.add(user15);
 		users.add(user16);
 	}
@@ -84,15 +100,34 @@ class GereGinasio implements Methods {
 		return null;
 	}
 	
-	public boolean bookSession(User user, String data, String hora, User trainer) {
-		Sessao sessao = new Sessao(user, data, hora, trainer);
-		for (int i = 0; i < users.size(); i++) {
-			if (user instanceof Colaborador &&
-					((Colaborador) users.get(i)).isAvailable() != false) {
-				return ((Colaborador) users.get(i)).addSessoes(sessao);
+	public boolean bookSession(User user, String data, User trainer) {
+		Sessao sessao = new Sessao(user, data, trainer);
+		for (int i = 0; i < ((Colaborador) trainer).getSessoes().size(); i++) {
+			if (((Colaborador) trainer).getSessoes().get(i).getData().equals(data)) {
+				return false;
 			}
 		}
-		return false;
+		
+		for (int i = 0; i < ((VIP) user).getSessoes().size(); i++) {
+			if (((VIP) user).getSessoes().get(i).getData().equals(data)) {
+				return false;
+			}
+		}
+		return ((VIP) user).addSessoes(sessao) && ((Colaborador) trainer).addSessoes(sessao);
+	}
+	
+	public void unBookSession(Sessao sessao, User user, User trainer) {
+		for (int i = 0; i < ((Colaborador) trainer).getSessoes().size(); i++) {
+			if (((Colaborador) trainer).getSessoes().get(i).equals(sessao)) {
+				((Colaborador) trainer).getSessoes().remove(i);
+			}
+		}
+		
+		for (int i = 0; i < ((VIP) user).getSessoes().size(); i++) {
+			if (((VIP) user).getSessoes().get(i).equals(sessao)) {
+				((VIP) user).getSessoes().remove(i);
+			}
+		}
 	}
 	
 	public void convertVIP(User user) {
@@ -106,6 +141,17 @@ class GereGinasio implements Methods {
 		}
 	}
 	
+	public void convertNormal(User user) {
+		User client = new User(user.getId(), user.getNome(), user.getEmail(), user.getPassword(), user.getNumero());
+		client.setContrato(user.getContrato());
+		for (int i = 0; i < users.size(); i++) {
+			if (user.equals(users.get(i))) {
+				users.remove(i);
+				users.add(client);
+			}
+		}
+	}
+	
 	public ArrayList<User> filterUsers() {
 		ArrayList<User> usersFiltrados = new ArrayList<>();
 		for (User user: users) {
@@ -114,5 +160,25 @@ class GereGinasio implements Methods {
 			}
 		}
 		return usersFiltrados;
+	}
+	
+	public ArrayList<User> filterColab() {
+		ArrayList<User> usersFiltrados = new ArrayList<>();
+		for (User user: users) {
+			if (user instanceof Colaborador) {
+				usersFiltrados.add(user);
+			}
+		}
+		return usersFiltrados;
+	}
+	
+	public int countContracts() {
+		ArrayList<User> usersFiltrados = new ArrayList<>();
+		for (User user: users) {
+			if (!(user instanceof Colaborador) && user.getContrato().getDataInicio() != null) {
+				usersFiltrados.add(user);
+			}
+		}
+		return usersFiltrados.size();
 	}
 }

@@ -16,8 +16,8 @@ public class VIP extends User {
 		return sessoes;
 	}
 
-	public void setSessoes(ArrayList<Sessao> sessoes) {
-		this.sessoes = sessoes;
+	public boolean addSessoes(Sessao sessao) {
+		return sessoes.add(sessao);
 	}
 	
 	public boolean hasSessoes() {
