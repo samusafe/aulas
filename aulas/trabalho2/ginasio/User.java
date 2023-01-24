@@ -7,17 +7,17 @@ import enums.ContratoType;
 public class User {
 	
 	private int id;
+	private String nome;
 	private String email;
 	private String password;
-	private String nome;
 	private String numero;
 	protected Contrato contrato;
 
-	public User(int id, String email, String password, String nome, String numero) {
+	public User(int id, String nome, String email, String password, String numero) {
 		this.id = id;
+		this.nome = nome;
 		this.email = email;
 		this.password = password;
-		this.nome = nome;
 		this.numero = numero;
 		contrato = new Contrato(this, null, null, AcessType.NULL, ContratoType.NULL, ClientType.NULL);
 	}
@@ -30,6 +30,14 @@ public class User {
 		this.id = id;
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
 	public String getEmail() {
 		return email;
@@ -51,16 +59,6 @@ public class User {
 	}
 
 
-	public String getNome() {
-		return nome;
-	}
-
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-
 	public String getNumero() {
 		return numero;
 	}
@@ -76,6 +74,10 @@ public class User {
 
 	public void setContrato(Contrato contrato) {
 		this.contrato = contrato;
+	}
+	
+	public String toString() {
+		return nome;
 	}
 
 	@Override

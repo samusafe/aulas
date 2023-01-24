@@ -4,29 +4,48 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
+import enums.AcessType;
+import enums.ClientType;
 import enums.ContratoType;
 
 public class Main {
@@ -43,6 +62,8 @@ public class Main {
 	private ImageIcon healthIcon = new ImageIcon(getClass().getResource("/img/health.png"));
 	private ImageIcon trainersIcon = new ImageIcon(getClass().getResource("/img/trainers.png"));
 	private ImageIcon weightIcon = new ImageIcon(getClass().getResource("/img/weight.png"));
+	private ImageIcon plusIcon = new ImageIcon(getClass().getResource("/img/plus.png"));
+	private ImageIcon searchIcon = new ImageIcon(getClass().getResource("/img/search.png"));
 	private ImageIcon ginasioIcon = new ImageIcon(getClass().getResource("/img/ginasio.png"));
 	private ImageIcon infoIcon = new ImageIcon(getClass().getResource("/img/info.png"));
 	private GereGinasio gereGinasio = new GereGinasio();
@@ -224,10 +245,10 @@ public class Main {
 						return;
 					}
 					
-					if  (user instanceof Colaborador) {
-						//drawColabMenu(user);
+					if (user instanceof Colaborador) {
+						drawGinasioMenu(user);
 					} else if (user instanceof VIP) {
-						//drawVipMenu(user);
+						drawGinasioMenu(user);
 					} else {
 						drawGinasioMenu(user);
 					}
@@ -379,21 +400,14 @@ public class Main {
 					showError("Insira numero");
 					return;
 				}
-				if (!gereGinasio.criarConta(gereGinasio.users.size(), emailTextField.getText(),
-						passwordTextField.getPassword(), nomeTextField.getText(), numeroTextField.getText())) {
+				if (!gereGinasio.criarConta(gereGinasio.users.size(), nomeTextField.getText(), emailTextField.getText(),
+						passwordTextField.getPassword(), numeroTextField.getText())) {
 					showError("Conta duplicada");
 					return;
 				}
-
-				User user = gereGinasio.entrarSistema(emailTextField.getText(), passwordTextField.getPassword());
 				
-				if  (user instanceof Colaborador) {
-					//drawColabMenu(user);
-				} else if (user instanceof VIP) {
-					//drawVipMenu(user);
-				} else {
-					drawGinasioMenu(user);
-				}
+				User user = gereGinasio.entrarSistema(emailTextField.getText(), passwordTextField.getPassword());
+				drawGinasioMenu(user);
 			}
 		});
 		
@@ -599,12 +613,6 @@ public class Main {
                 new CustomeBorder(), 
                 new EmptyBorder(new Insets(15, 25, 15, 25))));
 		
-		bookSession.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showError("marcar");
-			}
-		});
-		
 		bookSession.addMouseListener(new java.awt.event.MouseAdapter() {
 		    public void mouseEntered(java.awt.event.MouseEvent evt) {
 		    	bookSession.setBackground(Color.WHITE);
@@ -618,6 +626,59 @@ public class Main {
 		JLabel bookSessionIcon = new JLabel(bicepIcon);
 		bookSessionIcon.setBounds(25, 230, 47, 53);
 		
+		JButton manageClients = new JButton("Gerir clientes");
+		manageClients.setBounds(100, 300, 240, 60);
+		manageClients.setBackground(Color.CYAN);
+		manageClients.setForeground(Color.BLACK);
+		manageClients.setFocusable(false);
+		manageClients.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		manageClients.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	manageClients.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	manageClients.setBackground(Color.CYAN);
+		    }
+		});
+		
+		JLabel manageClientsIcon = new JLabel(contaIcon);
+		manageClientsIcon.setBounds(30, 310, 47, 47);
+		
+		JLabel nome = new JLabel("");
+		nome.setBounds(40, 380, 240, 47);
+		nome.setForeground(Color.WHITE);
+		
+		JLabel email = new JLabel("");
+		email.setBounds(40, 410, 240, 47);
+		email.setForeground(Color.WHITE);
+		
+		JLabel numero = new JLabel("");
+		numero.setBounds(40, 440, 240, 47);
+		numero.setForeground(Color.WHITE);
+		
+		JButton manageContract = new JButton("Contrato");
+		manageContract.setBounds(170, 410, 140, 60);
+		manageContract.setBackground(Color.CYAN);
+		manageContract.setForeground(Color.BLACK);
+		manageContract.setFocusable(false);
+		manageContract.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		manageContract.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	manageContract.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	manageContract.setBackground(Color.CYAN);
+		    }
+		});
+		
 		try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
@@ -627,13 +688,37 @@ public class Main {
             personalTrainers.setFont(font.deriveFont(Font.ITALIC, 22f));
             modifyAccount.setFont(font.deriveFont(Font.ITALIC, 22f));
             bookSession.setFont(font.deriveFont(Font.ITALIC, 22f));
+            manageClients.setFont(font.deriveFont(Font.ITALIC, 22f));
             welcome.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            nome.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            email.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            numero.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            manageContract.setFont(font2.deriveFont(Font.PLAIN, 18f));
             ginasioTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
         } catch (FontFormatException | IOException ex) {
             ex.printStackTrace();
         }
 		
+		if (user == null) {
+			frame.getContentPane().removeAll();
+			frame.getContentPane().setBackground(Color.DARK_GRAY);
+			
+			frame.add(horario);
+			frame.add(horarioIcon);
+			frame.add(primeirosSocorros);
+			frame.add(primeirosSocorrosIcon);
+			frame.add(personalTrainers);
+			frame.add(personalTrainersIcon);
+			frame.add(contratos);
+			frame.add(contratosIcon);
+			frame.add(ginasioTitle);
+			frame.add(back);
+			frame.repaint();
+		}
 		if (user instanceof User) {
+			frame.getContentPane().removeAll();
+			frame.getContentPane().setBackground(Color.DARK_GRAY);
+			
 			horario.setBounds(100, 260, 240, 60);
 			horarioIcon.setBounds(30, 270, 47, 47);
 			
@@ -653,28 +738,494 @@ public class Main {
 			frame.add(back);
 			
 			frame.repaint();
-		} else if (user instanceof VIP) {
+		}
+		if (user instanceof VIP) {
+			frame.getContentPane().removeAll();
+			frame.getContentPane().setBackground(Color.DARK_GRAY);
+			
+			horario.setBounds(100, 300, 240, 60);
+			horarioIcon.setBounds(30, 310, 47, 47);
+			
+			primeirosSocorros.setBounds(100, 380, 240, 60);
+			primeirosSocorrosIcon.setBounds(25, 380, 47, 53);
+			
+			welcome.setText("Bem-Vindo " + user.getNome());
+			
+			bookSession.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					showError("marcar");
+				}
+			});
 			
 			frame.add(bookSession);
 			frame.add(bookSessionIcon);
-			
-			frame.repaint();
-		} else if (user instanceof Colaborador) {
-			
-			
-			frame.repaint();
-		} else {
+
 			frame.add(horario);
 			frame.add(horarioIcon);
+			frame.add(modifyAccount);
+			frame.add(modifyAccountIcon);
 			frame.add(primeirosSocorros);
 			frame.add(primeirosSocorrosIcon);
-			frame.add(personalTrainers);
-			frame.add(personalTrainersIcon);
-			frame.add(contratos);
-			frame.add(contratosIcon);
 			frame.add(ginasioTitle);
+			frame.add(welcome);
 			frame.add(back);
+			
 			frame.repaint();
+		}
+		if (user instanceof Colaborador) {	
+			frame.getContentPane().removeAll();
+			frame.getContentPane().setBackground(Color.DARK_GRAY);
+			
+			primeirosSocorros.setBounds(100, 380, 240, 60);
+			primeirosSocorrosIcon.setBounds(25, 380, 47, 53);
+			
+			welcome.setText("Bem-Vindo " + user.getNome());
+			
+			bookSession.setText("Gerir sessões");
+			bookSession.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					showError("gerir sessoes");
+				}
+			});
+			
+			manageClients.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					drawManageClients(user);
+				}
+			});
+			
+			frame.add(bookSession);
+			frame.add(bookSessionIcon);
+			frame.add(manageClients);
+			frame.add(manageClientsIcon);
+			
+			frame.add(modifyAccount);
+			frame.add(modifyAccountIcon);
+			frame.add(primeirosSocorros);
+			frame.add(primeirosSocorrosIcon);
+			frame.add(ginasioTitle);
+			frame.add(welcome);
+			frame.add(back);
+			
+			frame.repaint();
+		}
+	}
+	
+	public void drawManageClients(User user) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawGinasioMenu(user);
+			}
+		});
+		
+		JLabel ginasioTitle = new JLabel("Clientes");
+		ginasioTitle.setBounds(80, 25, 280, 47);
+		ginasioTitle.setForeground(Color.WHITE);
+		
+		JLabel nome = new JLabel("");
+		nome.setBounds(40, 380, 240, 47);
+		nome.setForeground(Color.WHITE);
+		
+		JLabel email = new JLabel("");
+		email.setBounds(40, 410, 240, 47);
+		email.setForeground(Color.WHITE);
+		
+		JLabel numero = new JLabel("");
+		numero.setBounds(40, 440, 240, 47);
+		numero.setForeground(Color.WHITE);
+		
+		JButton manageContract = new JButton("Contrato");
+		manageContract.setBounds(190, 410, 140, 60);
+		manageContract.setBackground(Color.CYAN);
+		manageContract.setForeground(Color.BLACK);
+		manageContract.setFocusable(false);
+		manageContract.setBorder(BorderFactory.createCompoundBorder(
+                new CustomeBorder(), 
+                new EmptyBorder(new Insets(15, 25, 15, 25))));
+		
+		manageContract.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent evt) {
+		    	manageContract.setBackground(Color.WHITE);
+		    }
+
+		    public void mouseExited(java.awt.event.MouseEvent evt) {
+		    	manageContract.setBackground(Color.CYAN);
+		    }
+		});
+		
+		DefaultListModel<User> model = new DefaultListModel<>();
+		model.addAll(gereGinasio.filterUsers());
+		
+		JList<User> listUser = new JList<>(model);
+		listUser.setLayoutOrientation(JList.VERTICAL);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(55, 120, 250, 200);
+		scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+		scrollPane.setBorder(new TitledBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED),"Nome     | Total - " + gereGinasio.filterUsers().size()));
+		scrollPane.setViewportView(listUser);
+		
+		listUser.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				nome.setText("Nome: " + model.get(listUser.getSelectedIndex()).getNome());
+				email.setText("Email: " + model.get(listUser.getSelectedIndex()).getEmail());
+				numero.setText("Numero: " + model.get(listUser.getSelectedIndex()).getNumero());
+				manageContract.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						drawManageContract(user, model.get(listUser.getSelectedIndex()));
+					}
+				});
+				frame.add(manageContract);
+				frame.repaint();
+			}
+		});
+		
+		JButton search = new JButton(searchIcon);
+		search.setBounds(300, 60, 47, 47);
+		search.setBorder(null);
+		search.setOpaque(false);
+		search.setContentAreaFilled(false);
+		search.setBorderPainted(false);
+		search.setFocusable(false);
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField numberEntered = new JTextField();
+		    	
+		    	Object[] message = {
+		    	    "Numero:", numberEntered,
+		    	};
+
+		    	int option = JOptionPane.showConfirmDialog(frame, message, "Pesquisar", JOptionPane.OK_CANCEL_OPTION);
+		    	
+		    	if (option == JOptionPane.CLOSED_OPTION) {
+		    		return;
+		    	}
+		    	if (numberEntered.getText().equals("")) {
+					showError("Insira um numero");
+					return;
+				}
+		    	if (option == JOptionPane.OK_OPTION) {
+		    		String numeroPerson = numberEntered.getText();
+			    	drawManageContract(user, gereGinasio.getClientByNumber(numeroPerson));
+		    	}
+			}
+		});
+		
+		try {
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            nome.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            email.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            numero.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            manageContract.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            ginasioTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 48f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(back);
+		frame.add(search);
+		frame.add(ginasioTitle);
+		frame.add(scrollPane);
+		frame.add(nome);
+		frame.add(email);
+		frame.add(numero);
+		frame.setVisible(true);
+		frame.repaint();
+	}
+	
+	public void drawManageContract(User user, User client) {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().setBackground(Color.DARK_GRAY);
+		
+		JButton back = new JButton(backIcon);
+		back.setBounds(10, 20, 47, 47);
+		back.setBorder(null);
+		back.setOpaque(false);
+		back.setContentAreaFilled(false);
+		back.setBorderPainted(false);
+		back.setFocusable(false);
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawManageClients(user);
+			}
+		});
+		
+		JLabel title = new JLabel(client.getNome());
+		title.setBounds(80, 25, 280, 47);
+		title.setForeground(Color.WHITE);
+		
+		JLabel dataInicio = new JLabel("");
+		dataInicio.setBounds(60, 290, 240, 47);
+		dataInicio.setForeground(Color.WHITE);
+		
+		JLabel dataFim = new JLabel("");
+		dataFim.setBounds(60, 320, 240, 47);
+		dataFim.setForeground(Color.WHITE);
+		
+		JLabel acessType = new JLabel("");
+		acessType.setBounds(60, 150, 240, 47);
+		acessType.setForeground(Color.WHITE);
+		
+		JButton editContract1 = new JButton(editIcon);
+		editContract1.setBounds(300, 150, 40, 40);
+		editContract1.setBorder(null);
+		editContract1.setOpaque(false);
+		editContract1.setContentAreaFilled(false);
+		editContract1.setBorderPainted(false);
+		editContract1.setFocusable(false);
+		editContract1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawContract(user, client, 1, 1);
+			}
+		});
+		
+		JLabel contratoType = new JLabel("");
+		contratoType.setBounds(60, 200, 280, 47);
+		contratoType.setForeground(Color.WHITE);
+		
+		JButton editContract2 = new JButton(editIcon);
+		editContract2.setBounds(300, 200, 40, 40);
+		editContract2.setBorder(null);
+		editContract2.setOpaque(false);
+		editContract2.setContentAreaFilled(false);
+		editContract2.setBorderPainted(false);
+		editContract2.setFocusable(false);
+		editContract2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawContract(user, client, 1, 2);
+			}
+		});
+		
+		JLabel clientType = new JLabel("");
+		clientType.setBounds(60, 250, 240, 47);
+		clientType.setForeground(Color.WHITE);
+		
+		JButton editContract3 = new JButton(editIcon);
+		editContract3.setBounds(300, 250, 40, 40);
+		editContract3.setBorder(null);
+		editContract3.setOpaque(false);
+		editContract3.setContentAreaFilled(false);
+		editContract3.setBorderPainted(false);
+		editContract3.setFocusable(false);
+		editContract3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawContract(user, client, 1, 3);
+			}
+		});
+		
+		if (client.getContrato().getDataInicio() != null) {
+			dataInicio.setText("Data inicio - " + client.getContrato().getDataInicio());
+		}
+		if (client.getContrato().getDataFinal() != null) {
+			dataFim.setText("Data final - " + client.getContrato().getDataFinal());
+		}
+		if (client.getContrato().getAcessType().equals(AcessType.BASICO)) {
+			acessType.setText("Tipo de acesso - basico");
+		} else if (client.getContrato().getAcessType().equals(AcessType.COMPLETO)){
+			acessType.setText("Tipo de acesso - completo");
+		}
+		if (client.getContrato().getContratoType().equals(ContratoType.DIARIO)) {
+			contratoType.setText("Duração contrato - diario");
+		} else if (client.getContrato().getContratoType().equals(ContratoType.TRIMESTRAL)) {
+			contratoType.setText("Duração contrato - trimestral");
+		} else if (client.getContrato().getContratoType().equals(ContratoType.SEMESTRAL)) {
+			contratoType.setText("Duração contrato - semestral");
+		} else if (client.getContrato().getContratoType().equals(ContratoType.ANUAL)) {
+			contratoType.setText("Duração contrato - anual");
+		}
+		if (client.getContrato().getClientType().equals(ClientType.NORMAL)) {
+			clientType.setText("Tipo de cliente - normal");
+		} else if (client.getContrato().getClientType().equals(ClientType.VIP)) {
+			clientType.setText("Tipo de cliente - VIP");
+		}
+		
+		JButton newContract = new JButton(plusIcon);
+		newContract.setBounds(150, 450, 57, 57);
+		newContract.setBorder(null);
+		newContract.setOpaque(false);
+		newContract.setContentAreaFilled(false);
+		newContract.setBorderPainted(false);
+		newContract.setFocusable(false);
+		newContract.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawContract(user, client, 0, 0);
+			}
+		});
+		
+		if (client.getContrato().getAcessType().equals(AcessType.NULL)) {
+			editContract1.setVisible(false);
+		} else {
+			editContract1.setVisible(true);
+		}
+		if (client.getContrato().getClientType().equals(ClientType.NULL)) {
+			editContract2.setVisible(false);
+		} else {
+			editContract2.setVisible(true);
+		}
+		if (client.getContrato().getContratoType().equals(ContratoType.NULL)) {
+			editContract3.setVisible(false);
+		} else {
+			editContract3.setVisible(true);
+		}
+		
+		try {
+            Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
+            title.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 24f));
+            dataInicio.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            dataFim.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            acessType.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            contratoType.setFont(font2.deriveFont(Font.PLAIN, 18f));
+            clientType.setFont(font2.deriveFont(Font.PLAIN, 18f));
+        } catch (FontFormatException | IOException ex) {
+            ex.printStackTrace();
+        }
+		
+		frame.add(dataInicio);
+		frame.add(dataFim);
+		frame.add(acessType);
+		frame.add(contratoType);
+		frame.add(clientType);
+		frame.add(title);
+		frame.add(newContract);
+		frame.add(editContract1);
+		frame.add(editContract2);
+		frame.add(editContract3);
+		frame.add(back);
+		frame.repaint();
+	}
+	
+	public void drawContract(User user, User client, int edit, int option) {
+		if (edit == 0) {
+			if (client.getContrato().getDataInicio() != null) {
+				showError("Ja tem contrato");
+				return;
+			}
+			String[] acess = { "Basico", "Completo" };
+			String[] cli = { "Normal", "VIP" };
+			String[] contra = { "Diario", "Trimestral", "Semestral", "Anual" };
+			
+			String entrada1 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de acesso", "Acesso", JOptionPane.YES_NO_OPTION, null, acess, null);
+			
+			if (entrada1 == "Basico") {
+				client.getContrato().setAcessType(AcessType.BASICO);
+			} else if (entrada1 == "Completo") {
+				client.getContrato().setAcessType(AcessType.COMPLETO);
+			}
+			
+			String entrada2 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de cliente", "Acesso", JOptionPane.YES_NO_OPTION, null, cli, null);
+			
+			if (entrada2 == "Normal") {
+				client.getContrato().setClientType(ClientType.NORMAL);
+			} else if (entrada2 == "VIP") {
+				gereGinasio.convertVIP(client);
+				client.getContrato().setClientType(ClientType.VIP);
+			}
+			
+			String entrada3 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de contrato", "Acesso", JOptionPane.YES_NO_OPTION, null, contra, null);
+			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			Date date = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			
+			if (entrada3 == "Diario") {
+				client.getContrato().setContratoType(ContratoType.DIARIO);
+				client.getContrato().setDataInicio(dateFormat.format(date));
+				cal.add(Calendar.DATE, 1);
+				date = cal.getTime();
+				client.getContrato().setDataFinal(dateFormat.format(date));
+			} else if (entrada3 == "Trimestral") {
+				client.getContrato().setContratoType(ContratoType.TRIMESTRAL);
+				client.getContrato().setDataInicio(dateFormat.format(date));
+				cal.add(Calendar.DATE, 90);
+				date = cal.getTime();
+				client.getContrato().setDataFinal(dateFormat.format(date));
+			} else if (entrada3 == "Semestral") {
+				client.getContrato().setContratoType(ContratoType.SEMESTRAL);
+				client.getContrato().setDataInicio(dateFormat.format(date));
+				cal.add(Calendar.DATE, 180);
+				date = cal.getTime();
+				client.getContrato().setDataFinal(dateFormat.format(date));
+			} else if (entrada3 == "Anual") {
+				client.getContrato().setContratoType(ContratoType.ANUAL);
+				client.getContrato().setDataInicio(dateFormat.format(date));
+				cal.add(Calendar.DATE, 360);
+				date = cal.getTime();
+				client.getContrato().setDataFinal(dateFormat.format(date));
+			}
+		} else if (edit == 1) {
+			if (client.getContrato().getDataInicio() == null) {
+				showError("Nao tem contrato");
+				return;
+			}
+			
+			if (option == 1) {
+				String[] acess = { "Basico", "Completo" };
+				
+				String entrada1 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de acesso", "Acesso", JOptionPane.YES_NO_OPTION, null, acess, null);
+				
+				if (entrada1 == "Basico") {
+					client.getContrato().setAcessType(AcessType.BASICO);
+				} else if (entrada1 == "Completo") {
+					client.getContrato().setAcessType(AcessType.COMPLETO);
+				}
+			} else if (option == 3) {
+				String[] cli = { "Normal", "VIP" };
+				
+				String entrada2 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de cliente", "Acesso", JOptionPane.YES_NO_OPTION, null, cli, null);
+				
+				if (entrada2 == "Normal") {
+					client.getContrato().setClientType(ClientType.NORMAL);
+				} else if (entrada2 == "VIP") {
+					gereGinasio.convertVIP(client);
+					client.getContrato().setClientType(ClientType.VIP);
+				}
+			} else if (option == 2) {
+				String[] contra = { "Diario", "Trimestral", "Semestral", "Anual" };
+				
+				String entrada3 = (String) JOptionPane.showInputDialog(frame, "Escolha o tipo de contrato", "Acesso", JOptionPane.YES_NO_OPTION, null, contra, null);
+				
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date date = new Date();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				
+				if (entrada3 == "Diario") {
+					client.getContrato().setContratoType(ContratoType.DIARIO);
+					client.getContrato().setDataInicio(dateFormat.format(date));
+					cal.add(Calendar.DATE, 1);
+					date = cal.getTime();
+					client.getContrato().setDataFinal(dateFormat.format(date));
+				} else if (entrada3 == "Trimestral") {
+					client.getContrato().setContratoType(ContratoType.TRIMESTRAL);
+					client.getContrato().setDataInicio(dateFormat.format(date));
+					cal.add(Calendar.DATE, 90);
+					date = cal.getTime();
+					client.getContrato().setDataFinal(dateFormat.format(date));
+				} else if (entrada3 == "Semestral") {
+					client.getContrato().setContratoType(ContratoType.SEMESTRAL);
+					client.getContrato().setDataInicio(dateFormat.format(date));
+					cal.add(Calendar.DATE, 180);
+					date = cal.getTime();
+					client.getContrato().setDataFinal(dateFormat.format(date));
+				} else if (entrada3 == "Anual") {
+					client.getContrato().setContratoType(ContratoType.ANUAL);
+					client.getContrato().setDataInicio(dateFormat.format(date));
+					cal.add(Calendar.DATE, 360);
+					date = cal.getTime();
+					client.getContrato().setDataFinal(dateFormat.format(date));
+				}
+			}
 		}
 	}
 	
@@ -1379,7 +1930,6 @@ public class Main {
 		primeirosTitle.setForeground(Color.WHITE);
 		
 		try {
-			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/LoveAmour.ttf"));
             Font font2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/DinoAndFriend.ttf"));
             primeirosTitle.setFont(font2.deriveFont(Font.BOLD | Font.ITALIC, 24f));
         } catch (FontFormatException | IOException ex) {
@@ -1439,6 +1989,70 @@ public class Main {
             g2d.drawRoundRect(x, y, width - 1, height - 1, 25, 25);
         }   
     }
+	
+	public class CustomScrollBarUI extends BasicScrollBarUI {
+	    
+	      private final Dimension d = new Dimension();
+
+	      @Override
+	      protected JButton createDecreaseButton(int orientation) {
+	        return new JButton() {
+	          
+	            private static final long serialVersionUID = -3592643796245558676L;
+
+	            @Override
+	              public Dimension getPreferredSize() {
+	                return d;
+	              }
+	            };
+	      }
+
+	      @Override
+	      protected JButton createIncreaseButton(int orientation) {
+	        return new JButton() {
+	          
+	            private static final long serialVersionUID = 1L;
+
+	        @Override
+	          public Dimension getPreferredSize() {
+	            return d;
+	          }
+	        };
+	      }
+
+	      @Override
+	      protected void paintTrack(Graphics g, JComponent c, Rectangle r) {
+	      }
+
+	      @Override
+	      protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
+	        Graphics2D g2 = (Graphics2D) g.create();
+	        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	        Color color = null;
+	        JScrollBar sb = (JScrollBar) c;
+	        if (!sb.isEnabled() || r.width > r.height) {
+	          return;
+	        } else if (isDragging) {
+	          color = Color.DARK_GRAY; // change color
+	        } else if (isThumbRollover()) {
+	          color = Color.LIGHT_GRAY; // change color
+	        } else {
+	          color = Color.GRAY; // change color
+	        }
+	        g2.setPaint(color);
+	        g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+	        g2.setPaint(Color.WHITE);
+	        g2.drawRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+	        g2.dispose();
+	      }
+
+	      @Override
+	      protected void setThumbBounds(int x, int y, int width, int height) {
+	        super.setThumbBounds(x, y, width, height);
+	        scrollbar.repaint();
+	      }
+	}
+
 	
 	public static void main(String[] args) {
 		Main menu = new Main();
