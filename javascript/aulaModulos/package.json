@@ -1,0 +1,21 @@
+{
+  "name": "aula",
+  "version": "1.0.0",
+  "description": "",
+  "main": "aula1-ex.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "samu",
+  "license": "ISC",
+  "dependencies": {
+    "formidable": "^2.1.1",
+    "nodeman": "^1.1.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
