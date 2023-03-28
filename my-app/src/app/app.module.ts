@@ -4,6 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { CarPartsComponent } from './car-parts/car-parts.component';
+import { RacingDataService } from './car-parts/racing-data.service';
+
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -12,9 +15,10 @@ import { CarPartsComponent } from './car-parts/car-parts.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [RacingDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CarPart } from './car-parts';
-import { CARPARTS } from './mocks';
+import { RacingDataService } from './racing-data.service';
+//import { CARPARTS } from './mocks';
 
 @Component({
   selector: 'car-parts',
@@ -21,12 +22,14 @@ export class CarPartsComponent implements OnInit {
     return sum;
   }
 
-  constructor() {
+  constructor(private racingDataService:RacingDataService) {
     this.carParts = [];
   }
 
-  ngOnInit() {
-    this.carParts = CARPARTS;
+  ngOnInit(): void {
+    this.racingDataService.getCarParts().subscribe(
+      response=>this.carParts = response
+    );
   }
 
   upQuantity(part_auto:CarPart) {

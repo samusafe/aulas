@@ -2,6 +2,8 @@
 
 /* ----- Custom Theme ----- */
 
+@import '../node_modules/bootstrap/dist/css/bootstrap.css';
+
 html {
   height: 100%;
 }
